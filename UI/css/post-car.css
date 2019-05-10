@@ -1,0 +1,16 @@
+.form input[type='submit'] {
+	min-width: 3rem;
+	min-height: 2rem;
+}
+
+.form input[type="file"] {
+	display: none;
+}
+
+.file-label {
+	border: 1px solid #ccc;
+	display: inline-block;
+	padding: 6px 12px;
+	cursor: pointer;
+	background: #eee;
+}

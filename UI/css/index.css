@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.landing-inner h1.hero-text {
+	color: #f5c012;
+	font-family: 'Roboto', sans-serif;
+}
+
+.landing-inner p.lead {
+	color: #ccc;
+}
