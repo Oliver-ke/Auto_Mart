@@ -65,3 +65,10 @@ h3.large {
 	text-align: center !important;
 	font-size: 2rem;
 }
+
+/* Responsiveness */
+@media (max-width: 700px) {
+	.cars {
+		grid-template-columns: 1fr;
+	}
+}

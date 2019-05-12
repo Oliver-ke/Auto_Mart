@@ -319,3 +319,46 @@ a {
 .form input[type="file"] {
 	display: none;
 }
+
+/*Responsiveness */
+@media (max-width: 700px) {
+	.hide-sm {
+		display: none;
+	}
+
+	.container {
+		margin-top: 8rem;
+	}
+
+	.x-large {
+		font-size: 3rem;
+	}
+
+	.large {
+		font-size: 2rem;
+	}
+
+	.lead {
+		font-size: 1rem;
+	}
+
+	.navbar {
+		display: block;
+		text-align: center;
+	}
+
+	.navbar ul {
+		text-align: center;
+		justify-content: center;
+	}
+
+	.navbar h1 {
+		margin-bottom: 1rem;
+	}
+
+	.dash-buttons a {
+		display: block;
+		width: 100%;
+		margin-bottom: 0.2rem;
+	}
+}
