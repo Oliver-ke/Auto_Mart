@@ -1,0 +1,29 @@
+.biding-price button.btn {
+	width: 6rem !important;
+	height: 2rem;
+	margin-left: 0.6rem;
+	margin-top: 1.4rem;
+	background: #333 !important;
+	color: #fff;
+}
+
+.biding-price .form-group input {
+	cursor: default;
+}
+
+.biding-price .form-group input.focus {
+	background: #fff;
+}
+
+/*responsiveness */
+
+@media (max-width: 700px) {
+	.biding-price button.btn {
+		width: 6rem !important;
+		height: 2rem;
+		margin-left: 0.6rem;
+		margin-top: -1rem !important;
+		background: #333 !important;
+		color: #fff;
+	}
+}
