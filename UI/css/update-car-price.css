@@ -1,0 +1,11 @@
+input[value='Delete Advert'].btn {
+	background: var(--danger-color) !important;
+}
+
+input[name='updatePrice'].hidden {
+	display: none;
+}
+
+button.btn {
+	color: #333;
+}
