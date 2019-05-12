@@ -9,9 +9,8 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href="css/main.css" rel="stylesheet" type="text/css">
-  <link href="css/signUp-SignIn.css" rel="stylesheet" type="text/css">
   <link href="css/post-car.css" rel="stylesheet" type="text/css">
-  <title>AutoMart : Car Ads</title>
+  <title>AutoMart : Post Advert</title>
 </head>
 
 <body>
@@ -22,9 +21,16 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="pages.html">Pages</a></li>
-      <li><a href="search.html">Find Car's</a></li>
-      <li><a href="sign-up.html">Register</a></li>
-      <li><a href="sign-in.html">Login</a></li>
+      <li><a href="cars.html">Adverts</a></li>
+      <li><a href="dashboard.html">
+          <i class="fas fa-user">
+          </i>
+          <span class="hide-sm">Dashboard</span> </a></li>
+      <li><a href="sign-in.html">
+          <i class="fas fa-sign-out-alt">
+          </i>
+          <span class="hide-sm">Logout</span> </a>
+      </li>
     </ul>
   </nav>
   <section class="container">
@@ -34,6 +40,12 @@
       </h1>
       <p>Cars posted here can be later edited to suite your needs</p>
     </div>
+    <button class="btn btn-primary">
+      <a class="back-btn" href="dashboard.html">
+        <span class="text-primary"><i class="fas fa-angle-left"></i></span>
+        Back to Dashboard
+      </a>
+    </button>
     <div class="post-wrapper">
       <div class="form-container">
         <form action="dashboard.html" class="form">
