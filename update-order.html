@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href="css/main.css" rel="stylesheet" type="text/css">
-  <link href="css/post-car.css" rel="stylesheet" type="text/css">
-  <title>AutoMart : Post Advert</title>
+  <link href="css/detail-utility.css" rel="stylesheet" type="text/css">
+  <link href="css/update-order.css" rel="stylesheet" type="text/css">
+  <title>AutoMart | Update price</title>
 </head>
 
 <body>
@@ -34,53 +35,55 @@
     </ul>
   </nav>
   <section class="container">
-    <div class="head-text">
-      <h1 class="large text-primary">
-        Post Car Sale's Advert
-      </h1>
-      <p>Cars posted here can be later edited to suite your needs</p>
-    </div>
     <button class="btn btn-primary">
       <a class="back-btn" href="dashboard.html">
         <span class="text-primary"><i class="fas fa-angle-left"></i></span>
         Back to Dashboard
       </a>
     </button>
-    <div class="post-wrapper">
-      <div class="form-container">
-        <form action="dashboard.html" class="form">
-          <div class="form-group ">
-            <input type="text" name="carName" required placeholder=" Name of Car">
+    <div class="head-text">
+      <h1 class="large text-primary">
+        Purchase Order Detail
+      </h1>
+    </div>
+    <div class="purchase-item">
+      <div class="purchase-img">
+        <img src="img/cr1.jpg" alt="car-img">
+      </div>
+      <div class="detail-container mx-2">
+        <form class="form">
+          <div class="car-detail bg-dark my-1">
+            <p>Car Name |<span> Toyota Land Cruser </span></p>
           </div>
-          <div class="form-group">
-            <input type="text" name="manufacturer" placeholder=" Manufacturer">
+
+          <div class="car-detail bg-dark my-1">
+            <p>Manufacturer |<span> Toyota Inc </span></p>
           </div>
-          <div class="form-group">
-            <input type="number" name="price" placeholder=" Price in Naira">
-            <small>Enter car prices with Naira equivalent</small>
+          <div class="car-detail bg-dark my-1">
+            <p>Price |<span> #250000</span></p>
           </div>
-          <div class="form-group py-1">
-            <select>
-              <option disabled selected>Choose Car state</option>
-              <option value="new">New</option>
-              <option value="used">Used</option>
-            </select>
+          <div class="car-detail bg-dark my-1">
+            <p>Pub date |<span> 5th Oct 2019 </span></p>
           </div>
-          <div class="form-group">
-            <label for="car-img" class="file-label">
-              Choose Car image
-            </label>
-            <span class="file-name"><strong>No file Chosen</strong></span>
-            <input id="car-img" name="car-img" type="file" />
+          <div class="car-detail bg-dark my-1">
+            <p>State |<span> New </span></p>
           </div>
-          <input type="submit" value="Post Ads" class="btn btn-primary">
+          <div class="biding-price">
+            <p class="my-1"> Your Biding Price |</p>
+            <div class="form-group">
+              <input type="number" name="biding-price" value="2270000" readonly placeholder=" Price in Naira">
+              <small>Price in Naira(#)</small>
+            </div>
+            <button class="btn  py-2">Edit Price</button>
+          </div>
+          <input type="submit" value="Update" class="btn btn-primary my-1">
         </form>
       </div>
 
     </div>
 
   </section>
-  <script src="js/postCar.js"></script>
+  <script src="js/updateOrderPrice.js"></script>
 </body>
 
 </html>

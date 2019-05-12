@@ -1,0 +1,67 @@
+.cars {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 2rem;
+}
+
+.car {
+	background: #ccc;
+	font-weight: bold;
+	border: 1px solid #333;
+}
+
+.car p.price span {
+	color: var(--danger-color);
+}
+
+.car p.state span {
+	color: var(--secondary-color);
+}
+
+.tags {
+	display: flex;
+	justify-content: space-between;
+}
+
+.btn {
+	display: block;
+	text-align: center;
+	background: var(--secondary-color);
+	color: #333;
+}
+.car p.name {
+	margin-bottom: -0.5rem !important;
+	font-weight: bold;
+	font-size: 1.5rem;
+}
+
+.search-form .search {
+	display: flex;
+	justify-content: space-between;
+}
+
+.search-form .search input[type='text'] {
+	width: 100%;
+	padding: 0.4rem;
+	font-size: 1.2rem;
+	border: 1px solid #ccc;
+}
+
+.filters input[type='number'],
+input[type='text'],
+select {
+	padding: 0.4rem;
+	font-size: 1.2rem;
+	border: 1px solid #ccc;
+}
+
+.search-form {
+	border: #ccc 1px solid;
+	padding: 2rem;
+	margin-bottom: 5rem;
+}
+
+h3.large {
+	text-align: center !important;
+	font-size: 2rem;
+}
