@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- remember fontawesom -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <link href="css/dashboard.css" rel="stylesheet" type="text/css">
+  <title>AutoMart | Dashboard</title>
+</head>
+
+<body>
+  <nav class="navbar bg-dark">
+    <h1><a href="dashboard.html">
+        <i class="fas fa-car"></i>Auto<span class="logo">Mart</span>
+      </a></h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cars.html">Adverts</a></li>
+      <li><a class="current" href="dashboard.html">
+          <i class="fas fa-user">
+          </i>
+          <span class="hide-sm">Dashboard</span> </a></li>
+      <li><a href="sign-in.html">
+          <i class="fas fa-sign-out-alt">
+          </i>
+          <span class="hide-sm">Logout</span> </a>
+      </li>
+    </ul>
+  </nav>
+  <section class="container">
+    <h1 class="large text-primary">
+      Admin Dashboard
+    </h1>
+    <p class="lead">
+      <i class="fas fa-user">
+      </i>
+      Welcome Admin
+    </p>
+
+    <div class="dash-buttons">
+      <a href="post-car.html" class="btn">
+        <i class="fas fa-paper-plane text-primary">
+        </i> Post Advert</a>
+
+      <a href="cars.html" class="btn">
+        <i class="fas fa-eye text-primary">
+        </i> View Adverts</a>
+    </div>
+
+    <h2 class="my-2">
+      <span class="text-primary">|</span>
+      Sold Cars
+    </h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th class="hide-sm">Price(#)</th>
+          <th class="hide-sm">State</th>
+          <th>View/delete Advert</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hide-sm">5th May 2018</td>
+          <td>Toyota G-wagon</td>
+          <td class="hide-sm">500000</td>
+          <td class="hide-sm">old</td>
+          <td>
+            <button class="btn btn-danger">
+              <a href="admin-post-detail.html">
+                View/Delete
+              </a>
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="hide-sm">13 July 2017</td>
+          <td>VolksWagon</td>
+          <td class="hide-sm">452000</td>
+          <td class="hide-sm">New</td>
+          <td>
+            <button class="btn btn-danger">
+              <a href="admin-post-detail.html">
+                View/Delete
+              </a>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td class="hide-sm">4th December 2017</td>
+          <td>Honda SUV</td>
+          <td class="hide-sm">452000</td>
+          <td class="hide-sm">New</td>
+          <td>
+            <button class="btn btn-danger">
+              <a href="admin-post-detail.html">
+                View/Delete
+              </a>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="my-2">
+      <span class="text-primary">|</span> Unsold
+    </h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th class="hide-sm">Price(#)</th>
+          <th class="hide-sm">State</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hide-sm">13 July 2017</td>
+          <td>Ferarri</td>
+          <td class="hide-sm">452000000</td>
+          <td class="hide-sm">New</td>
+          <td>
+            <button class="btn btn-danger">
+              <a href="admin-post-detail.html">
+                View/Delete
+              </a>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td class="hide-sm">4th December 2017</td>
+          <td>Honda Pilot</td>
+          <td class="hide-sm">452000</td>
+          <td class="hide-sm">New</td>
+          <td>
+            <button class="btn btn-danger">
+              <a href="admin-post-detail.html">
+                View/Delete
+              </a>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+
+</html>
