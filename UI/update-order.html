@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- remember fontawesom -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <link href="css/detail-utility.css" rel="stylesheet" type="text/css">
+  <link href="css/update-order.css" rel="stylesheet" type="text/css">
+  <title>AutoMart | Update price</title>
+</head>
+
+<body>
+  <nav class="navbar bg-dark">
+    <h1><a href="dashboard.html">
+        <i class="fas fa-car"></i>Auto<span class="logo">Mart</span>
+      </a></h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="pages.html">Pages</a></li>
+      <li><a href="cars.html">Adverts</a></li>
+      <li><a href="dashboard.html">
+          <i class="fas fa-user">
+          </i>
+          <span class="hide-sm">Dashboard</span> </a></li>
+      <li><a href="sign-in.html">
+          <i class="fas fa-sign-out-alt">
+          </i>
+          <span class="hide-sm">Logout</span> </a>
+      </li>
+    </ul>
+  </nav>
+  <section class="container">
+    <button class="btn btn-primary">
+      <a class="back-btn" href="dashboard.html">
+        <span class="text-primary"><i class="fas fa-angle-left"></i></span>
+        Back to Dashboard
+      </a>
+    </button>
+    <div class="head-text">
+      <h1 class="large text-primary">
+        Purchase Order Detail
+      </h1>
+    </div>
+    <div class="purchase-item">
+      <div class="purchase-img">
+        <img src="img/cr1.jpg" alt="car-img">
+      </div>
+      <div class="detail-container mx-2">
+        <form class="form">
+          <div class="car-detail bg-dark my-1">
+            <p>Car Name |<span> Toyota Land Cruser </span></p>
+          </div>
+
+          <div class="car-detail bg-dark my-1">
+            <p>Manufacturer |<span> Toyota Inc </span></p>
+          </div>
+          <div class="car-detail bg-dark my-1">
+            <p>Price |<span> #250000</span></p>
+          </div>
+          <div class="car-detail bg-dark my-1">
+            <p>Pub date |<span> 5th Oct 2019 </span></p>
+          </div>
+          <div class="car-detail bg-dark my-1">
+            <p>State |<span> New </span></p>
+          </div>
+          <div class="biding-price">
+            <p class="my-1"> Your Biding Price |</p>
+            <div class="form-group">
+              <input type="number" name="biding-price" value="2270000" readonly placeholder=" Price in Naira">
+              <small>Price in Naira(#)</small>
+            </div>
+            <button class="btn  py-2">Edit Price</button>
+          </div>
+          <input type="submit" value="Update" class="btn btn-primary my-1">
+        </form>
+      </div>
+
+    </div>
+
+  </section>
+  <script src="js/updateOrderPrice.js"></script>
+</body>
+
+</html>
