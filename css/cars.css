@@ -5,9 +5,13 @@
 }
 
 .car {
-	background: #ccc;
+	background: #fff;
 	font-weight: bold;
 	border: 1px solid #333;
+}
+
+.car img {
+	height: 20rem;
 }
 
 .car p.price span {
@@ -58,7 +62,6 @@ select {
 .search-form {
 	border: #ccc 1px solid;
 	padding: 2rem;
-	margin-bottom: 5rem;
 }
 
 h3.large {
@@ -66,9 +69,22 @@ h3.large {
 	font-size: 2rem;
 }
 
+section.container-full {
+	margin-top: 0;
+}
+
 /* Responsiveness */
-@media (max-width: 700px) {
+@media screen and (max-width: 700px) {
 	.cars {
 		grid-template-columns: 1fr;
+	}
+	.search-form {
+		padding: 0.5rem;
+	}
+}
+
+@media screen and (max-width: 1000px) and (min-width: 701px) {
+	.cars {
+		grid-template-columns: 1fr 1fr;
 	}
 }

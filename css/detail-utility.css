@@ -3,6 +3,8 @@
 	grid-template-areas: 'purchase-img details';
 }
 
+/* or grid-template-areas: 'purchase-img' 'details'; */
+
 .detail-container {
 	grid-area: details;
 }
@@ -54,10 +56,23 @@
 	border-radius: 0.2rem;
 }
 
+a.frud-link {
+	color: var(--danger-color);
+	font-weight: bold;
+}
+
 /* Responsive ness */
 @media (max-width: 700px) {
 	.purchase-item {
 		display: grid;
 		grid-template-areas: 'purchase-img' 'details';
+	}
+	.detail-container {
+		margin-left: -1rem !important;
+		margin-right: -1rem !important;
+	}
+
+	.biding-price p {
+		font-size: 0.9rem;
 	}
 }
