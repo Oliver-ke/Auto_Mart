@@ -4,7 +4,7 @@
 	"description": "This project is based of the Andela coding Bootcamp Challenge",
 	"main": "index.js",
 	"scripts": {
-		"test": "mocha",
+		"test": "mocha --exit || true",
 		"coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
 		"deploy": "gh-pages -d UI",
 		"start": "node server.js",
@@ -21,9 +21,12 @@
 	},
 	"homepage": "https://github.com/Oliver-ke/Auto_Mart#readme",
 	"dependencies": {
+		"bcryptjs": "^2.4.3",
 		"chai": "^4.2.0",
+		"chai-http": "^4.3.0",
 		"express": "^4.16.4",
-		"gh-pages": "^2.0.1"
+		"gh-pages": "^2.0.1",
+		"validator": "^10.11.0"
 	},
 	"devDependencies": {
 		"coveralls": "^3.0.3",
