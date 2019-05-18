@@ -5,9 +5,10 @@ const router = express.Router();
 
 // Input validation
 const validateSignUpRequest = require('../../validators/signUpValidator');
+const validateSignInRequest = require('../../validators/signInValidator');
 
 // User memory storage interface
-const { addUser } = require('../../data/User');
+const { addUser, findUser } = require('../../data/User');
 
 // @route POST /auth/signup
 // @desc Create user account
@@ -32,6 +33,19 @@ router.post('/signup', (req, res) => {
       return res.status(400).json({ status: 400, error: 'Email already exist' });
     }
     return res.status(201).json({ status: 201, data: result });
+  });
+});
+
+router.post('/signin', (req, res) => {
+  const { errors, isValid } = validateSignInRequest(req.body);
+  if (!isValid) {
+    return res.status(400).json({ status: 400, error: errors });
+  }
+  findUser(req.body, (err, result) => {
+    if (err) {
+      return res.status(401).json({ status: 401, error: err });
+    }
+    return res.status(200).json({ status: 200, data: result });
   });
 });
 
