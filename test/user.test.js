@@ -139,7 +139,7 @@ describe('api/v1/auth/signin', () => {
       });
     });
 
-    it('should worn for missing parameters', (done) => {
+    it('should warn for missing parameters', (done) => {
       const user = {
         email: 'kelechi22@gmail.com',
       };
