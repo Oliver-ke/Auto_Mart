@@ -8,9 +8,10 @@ app.use(express.json());
 
 // Routes
 const users = require('./routes/api/users');
+const car = require('./routes/api/car');
 
 app.use('/api/v1/auth', users);
-
+app.use('/api/v1/car', car);
 // custom error middleware to prevent  app from breaking entirely
 app.use((req, res, next) => {
   const error = new Error('Route Not Found');
