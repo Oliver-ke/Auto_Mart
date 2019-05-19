@@ -8,5 +8,3 @@ catche:
 script:
   - "npm run coverage"
 
-env:
-  - CLOUD_NAME='oliver-k' API_KEY='817564648324395' API_SECRET='cWIsY9umwmVf3KeYbs7jJbwh-5A' JWT_SECRET='EPIC values'
