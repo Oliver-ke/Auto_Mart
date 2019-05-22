@@ -8,6 +8,6 @@ module.exports = (req, res, next) => {
     req.userData = decodeData;
     return next();
   } catch (error) {
-    return res.status(401).json({ status: 401, error });
+    return res.status(401).json({ status: 401, error: 'Authorization failed' });
   }
 };
