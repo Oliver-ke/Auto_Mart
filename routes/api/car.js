@@ -23,8 +23,6 @@ router.post('/', authMiddleware, (req, res) => {
     status: req.body.status ? req.body.status : 'available',
   };
 
-  addCar(newCar, (result) => {
-    res.status(201).json({ status: 201, data: result });
-  });
+  addCar(newCar, result => res.status(201).json({ status: 201, data: result }));
 });
 module.exports = router;
