@@ -32,7 +32,18 @@ const getCar = (id, options = null, cb) => {
   return cb(foundCar);
 };
 
+const updateCar = (id, key, value, cb) => {
+  const foundCar = Cars.find(car => car.id === id);
+  if (foundCar) {
+    const update = { ...foundCar, [key]: value };
+    Cars[id - 1] = update;
+    return cb(null, update);
+  }
+  return cb(`No car with the give id ${id}`, null);
+};
+
 module.exports = {
   addCar,
   getCar,
+  updateCar,
 };
