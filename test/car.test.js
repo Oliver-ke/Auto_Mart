@@ -177,42 +177,89 @@ describe('Car endpoint', () => {
       });
     });
   });
-  describe('api/v1/car/{car_id}/{status}', () => {
-    it('Should update car price', (done) => {
-      const user = {
-        email: 'JohnDoe@gmail.com',
-        password: 'hello',
-      };
-      chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
-        chai
-          .request(app)
-          .patch('/api/v1/car/3/sold')
-          .set('authorization', `Bearer ${res.body.data.token}`)
-          .end((carErr, carRes) => {
-            carRes.should.have.status(200);
-            carRes.body.should.be.a('object');
-            carRes.body.data.should.have.property('status');
-            carRes.body.data.status.should.equal('sold');
-            done();
-          });
+  describe('api/v1/car/{car_id}/status', () => {
+    describe('PATCH', () =>{
+      it('Should update car status', (done) => {
+        const user = {
+          email: 'JohnDoe@gmail.com',
+          password: 'hello',
+        };
+        chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+          chai
+            .request(app)
+            .patch('/api/v1/car/3/status')
+            .send({ status: 'sold' })
+            .set('authorization', `Bearer ${res.body.data.token}`)
+            .end((carErr, carRes) => {
+              carRes.should.have.status(200);
+              carRes.body.should.be.a('object');
+              carRes.body.data.should.have.property('status');
+              carRes.body.data.status.should.equal('sold');
+              done();
+            });
+        });
+      });
+      it('Should error invalid request parameters', (done) => {
+        const user = {
+          email: 'JohnDoe@gmail.com',
+          password: 'hello',
+        };
+        chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+          chai
+            .request(app)
+            .patch('/api/v1/car/wrongId/status')
+            .send({ status: 'sold' })
+            .set('authorization', `Bearer ${res.body.data.token}`)
+            .end((carErr, carRes) => {
+              carRes.should.have.status(400);
+              carRes.body.should.be.a('object');
+              carRes.body.should.have.property('error');
+              done();
+            });
+        });
       });
     });
-    it('Should error invalid request parameters', (done) => {
-      const user = {
-        email: 'JohnDoe@gmail.com',
-        password: 'hello',
-      };
-      chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
-        chai
-          .request(app)
-          .patch('/api/v1/car/wrongId/sold')
-          .set('authorization', `Bearer ${res.body.data.token}`)
-          .end((carErr, carRes) => {
-            carRes.should.have.status(400);
-            carRes.body.should.be.a('object');
-            carRes.body.should.have.property('error');
-            done();
-          });
+  });
+  describe('api/v1/car/{car_id}/price', () => {
+    describe('PATCH', () => {
+      it('Should update car price', (done) => {
+        const user = {
+          email: 'JohnDoe@gmail.com',
+          password: 'hello',
+        };
+        chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+          chai
+            .request(app)
+            .patch('/api/v1/car/3/price')
+            .send({ price: 45990.99 })
+            .set('authorization', `Bearer ${res.body.data.token}`)
+            .end((carErr, carRes) => {
+              carRes.should.have.status(200);
+              carRes.body.should.be.a('object');
+              carRes.body.data.should.have.property('status');
+              carRes.body.data.status.should.equal('sold');
+              done();
+            });
+        });
+      });
+      it('Should error invalid request parameters', (done) => {
+        const user = {
+          email: 'JohnDoe@gmail.com',
+          password: 'hello',
+        };
+        chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+          chai
+            .request(app)
+            .patch('/api/v1/car/wrongId/price')
+            .send({ price: 98884.66 })
+            .set('authorization', `Bearer ${res.body.data.token}`)
+            .end((carErr, carRes) => {
+              carRes.should.have.status(400);
+              carRes.body.should.be.a('object');
+              carRes.body.should.have.property('error');
+              done();
+            });
+        });
       });
     });
   });

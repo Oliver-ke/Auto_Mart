@@ -4,27 +4,50 @@
 // this file contains an interface for manipulating orders
 
 // memory data store
-const Orders = [];
+const Orders = [
+  {
+    price_offered: 223456,
+    car_id: 1,
+    buyer: 2,
+    status: 'pending',
+    created_on: '2019-05-21T22:18:55.087Z',
+    price: 12300.5,
+    id: 1,
+  },
+  {
+    price_offered: 223456,
+    car_id: 2,
+    buyer: 1,
+    status: 'pending',
+    created_on: '2019-05-21T22:18:55.087Z',
+    price: 12500.5,
+    id: 2,
+  },
+];
+
 const addOrder = (orderData, cb) => {
   orderData.id = Orders.length + 1;
   Orders.push(orderData);
   return cb(orderData);
 };
 
-const getOrder = (id) => {
-  const foundOrder = Orders.find(order => order.id === id);
-  return foundOrder;
+const findOrder = (id) => {
+  const index = Orders.findIndex(order => order.id === id);
+  if (index !== -1) {
+    const order = Orders[index];
+    const findResult = { index, order };
+    return findResult;
+  }
+  return null;
 };
 
 const updateOrder = (id, userId, newPrice, cb) => {
   // check if the order exist
-  const order = getOrder(id);
+  const { order, index } = findOrder(id);
   if (order) {
     if (order.status === 'pending') {
       // confirm that the owner of the order matches the authenticated user
       if (userId === order.buyer) {
-        // since the order id is the priv length + 1, then the index is id - 1
-        // e.g if id=1 then its index=0
         const oldPrice = order.price_offered;
         const update = {
           ...order,
@@ -32,7 +55,7 @@ const updateOrder = (id, userId, newPrice, cb) => {
           old_price_offered: oldPrice,
           new_price_offered: newPrice,
         };
-        Orders[id - 1] = update;
+        Orders[index] = update;
 
         return cb(null, update);
       }

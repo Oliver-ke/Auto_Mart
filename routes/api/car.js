@@ -30,15 +30,17 @@ router.post('/', authMiddleware, (req, res) => {
 // @route PATCH /car/<:car_id>/status
 // @desc Mark posted car as sold
 // @access Private, only authenticated users can mark ads as sold
-router.patch('/:car_id/:status', authMiddleware, (req, res) => {
-  let { car_id, status } = req.params;
+router.patch('/:car_id/status', authMiddleware, (req, res) => {
+  let { car_id } = req.params;
+  const { status } = req.body;
   // parse id to number type
   car_id = +car_id;
+  const userId = req.userData.id;
   if (status === 'sold' || status === 'available') {
     if (!car_id) {
       return res.status(400).json({ status: 400, error: 'Car_id must be a number' });
     }
-    updateCar(car_id, 'status', status, (err, updatedCar) => {
+    updateCar(car_id, userId, 'status', status, (err, updatedCar) => {
       if (!err) {
         return res.status(200).json({ status: 200, data: updatedCar });
       }
@@ -46,6 +48,28 @@ router.patch('/:car_id/:status', authMiddleware, (req, res) => {
     });
   } else {
     return res.status(400).json({ status: 400, error: 'status can either be sold or available' });
+  }
+});
+
+// @route PATCH /car/<:car_id>/price
+// @desc Update car price
+// @access Private, only authenticated users can update price
+router.patch('/:car_id/price', authMiddleware, (req, res) => {
+  let { car_id } = req.params;
+  let { price } = req.body;
+  // parse id to number type
+  car_id = +car_id;
+  price = +price;
+  const userId = req.userData.id;
+  if (price && car_id) {
+    updateCar(car_id, userId, 'price', price, (err, updatedCar) => {
+      if (!err) {
+        return res.status(200).json({ status: 200, data: updatedCar });
+      }
+      return res.status(400).json({ status: 400, error: err });
+    });
+  } else {
+    return res.status(400).json({ status: 400, error: 'car_id and price must be a number type' });
   }
 });
 module.exports = router;
