@@ -45,9 +45,9 @@ router.post('/', authMiddleware, (req, res) => {
 // @route PATCH /api/v1/order/<:order_id>/price
 // @desc Upate order price
 // @access Private, only authenticated users can make update orders
-router.patch('/:order_id/:price', authMiddleware, (req, res) => {
-  let { order_id, price } = req.params;
-
+router.patch('/:order_id/price', authMiddleware, (req, res) => {
+  let { order_id } = req.params;
+  let { price } = req.body;
   // parse params to number type
   order_id = +order_id;
   price = +price;

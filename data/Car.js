@@ -17,26 +17,52 @@ const Cars = [
     email: 'johndoe@gmail.com',
     id: 1,
   },
+  {
+    state: 'used',
+    status: 'available',
+    price: 1000.5,
+    manufacturer: 'Toyota inc',
+    model: 'Land cruiser',
+    body_type: 'jeep',
+    owner: 2,
+    created_on: '2019-05-19T17:02:53.271Z',
+    email: 'johndoe@gmail.com',
+    id: 2,
+  },
 ];
+
 const addCar = (carData, cb) => {
   carData.id = Cars.length + 1;
   Cars.push(carData);
   cb(carData);
 };
 
+const findCar = (id) => {
+  const index = Cars.findIndex(car => car.id === id);
+  if (index !== -1) {
+    const car = Cars[index];
+    const findResult = { index, car };
+    return findResult;
+  }
+  return { index: null, car: null };
+};
+
 const getCar = (id, options = null, cb) => {
   if (options) {
     // do something with options such as filtering
   }
-  const foundCar = Cars.find(car => car.id === id);
-  return cb(foundCar);
+  const { car } = findCar(id);
+  return cb(car);
 };
 
-const updateCar = (id, key, value, cb) => {
-  const foundCar = Cars.find(car => car.id === id);
-  if (foundCar) {
-    const update = { ...foundCar, [key]: value };
-    Cars[id - 1] = update;
+const updateCar = (id, userId, key, value, cb) => {
+  const { car, index } = findCar(id);
+  if (car) {
+    if (car.owner !== userId) {
+      return cb(`Current users has no car with id ${id}`, null);
+    }
+    const update = { ...car, [key]: value };
+    Cars[index] = update;
     return cb(null, update);
   }
   return cb(`No car with the give id ${id}`, null);

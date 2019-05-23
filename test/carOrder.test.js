@@ -177,7 +177,8 @@ describe('Car Order endpoints', () => {
         chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
           chai
             .request(app)
-            .patch('/api/v1/order/1/300000')
+            .patch('/api/v1/order/1/price')
+            .send({ price: 300000 })
             .set('authorization', `Bearer ${res.body.data.token}`)
             .end((orderErr, orderRes) => {
               orderRes.should.have.status(200);
@@ -208,7 +209,8 @@ describe('Car Order endpoints', () => {
             .end((orderErr, orderRes) => {
               chai
                 .request(app)
-                .patch(`/api/v1/order/${orderRes.body.data.id}/300000`)
+                .patch(`/api/v1/order/${orderRes.body.data.id}/price`)
+                .send({ price: 34550 })
                 .set('authorization', `Bearer ${res.body.data.token}`)
                 .end((updateErr, updateRes) => {
                   updateRes.should.have.status(400);
