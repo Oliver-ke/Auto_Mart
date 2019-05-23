@@ -2,7 +2,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const carPostValidator = require('../../validators/carPostValidator');
-const { addCar, updateCar } = require('../../data/Car');
+const { addCar, updateCar, getCar } = require('../../data/Car');
 
 const router = express.Router();
 
@@ -70,6 +70,26 @@ router.patch('/:car_id/price', authMiddleware, (req, res) => {
     });
   } else {
     return res.status(400).json({ status: 400, error: 'car_id and price must be a number type' });
+  }
+});
+
+// @route GET /car/<:car_id>
+// @desc get a specific car
+// @access Public, anyone can view specific car
+router.get('/:car_id', (req, res) => {
+  let { car_id } = req.params;
+
+  // parse car_id to number type
+  car_id = +car_id;
+  if (car_id) {
+    getCar(car_id, null, (result) => {
+      if (!result) {
+        return res.status(404).json({ status: 404, error: `car with id ${car_id} does not exist` });
+      }
+      return res.status(200).json({ status: 200, data: result });
+    });
+  } else {
+    return res.status(400).json({ status: 400, error: 'car_id should be a number type' });
   }
 });
 module.exports = router;
