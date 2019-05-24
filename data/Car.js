@@ -53,6 +53,18 @@ const Cars = [
     email: 'johndoe@gmail.com',
     id: 4,
   },
+  {
+    state: 'used',
+    status: 'available',
+    price: 1000.5,
+    manufacturer: 'Toyota inc',
+    model: 'Land cruiser',
+    body_type: 'jeep',
+    owner: 5,
+    created_on: '2019-05-19T17:02:53.271Z',
+    email: 'johndoe@gmail.com',
+    id: 5,
+  },
 ];
 
 const addCar = (carData, cb) => {
@@ -99,8 +111,18 @@ const updateCar = (id, userId, key, value, cb) => {
   return cb(`No car with the give id ${id}`, null);
 };
 
+const deleteCar = (id, cb) => {
+  const { index } = findCar(id);
+  if (index !== null) {
+    Cars.splice(index, 1);
+    return cb(null, 'Car ad successfully deleted');
+  }
+  return cb(`Car with id ${id} does not exist`, null);
+};
+
 module.exports = {
   addCar,
   getCar,
   updateCar,
+  deleteCar,
 };
