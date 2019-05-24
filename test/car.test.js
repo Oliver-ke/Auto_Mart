@@ -187,7 +187,7 @@ describe('Car endpoint', () => {
         chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
           chai
             .request(app)
-            .patch('/api/v1/car/3/status')
+            .patch('/api/v1/car/4/status')
             .send({ status: 'sold' })
             .set('authorization', `Bearer ${res.body.data.token}`)
             .end((carErr, carRes) => {
@@ -230,14 +230,13 @@ describe('Car endpoint', () => {
         chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
           chai
             .request(app)
-            .patch('/api/v1/car/3/price')
+            .patch('/api/v1/car/4/price')
             .send({ price: 45990.99 })
             .set('authorization', `Bearer ${res.body.data.token}`)
             .end((carErr, carRes) => {
               carRes.should.have.status(200);
               carRes.body.should.be.a('object');
               carRes.body.data.should.have.property('status');
-              carRes.body.data.status.should.equal('sold');
               done();
             });
         });
@@ -283,6 +282,27 @@ describe('Car endpoint', () => {
       });
       it('Should error for invalid car_id', (done) => {
         chai.request(app).get('/api/v1/car/ftk987').end((carErr, carRes) => {
+          carRes.should.have.status(400);
+          carRes.body.should.be.a('object');
+          carRes.body.should.have.property('error');
+          done();
+        });
+      });
+    });
+  });
+  describe('api/v1/car?status=available', () => {
+    describe('GET', () => {
+      it('Should get cars with status available', (done) => {
+        chai.request(app).get('/api/v1/car?status=available').end((carErr, carRes) => {
+          carRes.should.have.status(200);
+          carRes.body.should.be.a('object');
+          carRes.body.should.have.property('data');
+          carRes.body.data[0].status.should.equal('available');
+          done();
+        });
+      });
+      it('Should error for invalid query parameter', (done) => {
+        chai.request(app).get('/api/v1/car?status=34jjdkr').end((carErr, carRes) => {
           carRes.should.have.status(400);
           carRes.body.should.be.a('object');
           carRes.body.should.have.property('error');

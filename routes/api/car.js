@@ -78,7 +78,6 @@ router.patch('/:car_id/price', authMiddleware, (req, res) => {
 // @access Public, anyone can view specific car
 router.get('/:car_id', (req, res) => {
   let { car_id } = req.params;
-
   // parse car_id to number type
   car_id = +car_id;
   if (car_id) {
@@ -91,5 +90,20 @@ router.get('/:car_id', (req, res) => {
   } else {
     return res.status(400).json({ status: 400, error: 'car_id should be a number type' });
   }
+});
+
+// @route GET /car?status='avialable'
+// @desc view all unsold cars
+// @access Public, anyone can view cars
+router.get('/', (req, res) => {
+  let { status } = req.query;
+  status = status.toLowerCase();
+  if (status) {
+    if (status === 'available') {
+      return getCar(null, { status }, result => res.status(200).json({ status: 200, data: result }));
+    }
+    return res.status(400).json({ status: 400, error: 'status parameter is invalid' });
+  }
+  return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
 });
 module.exports = router;
