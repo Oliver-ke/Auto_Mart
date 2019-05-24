@@ -73,9 +73,9 @@ const findCar = (id) => {
 
 const getCar = (id, options = null, cb) => {
   if (options) {
-    if (options.status && options.min_price && options.max_price) {
+    if (options.status && options.minPrice && options.maxPrice) {
       const match = Cars.filter(
-        car => car.status === options.status && car.price >= options.min_price && car.price <= options.max_price,
+        car => car.status === options.status && car.price >= options.minPrice && car.price <= options.maxPrice,
       );
       return cb(match);
     }

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable camelcase */
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
@@ -92,13 +93,19 @@ router.get('/:car_id', (req, res) => {
   }
 });
 
-// @route GET /car?status='avialable'
+// @route GET /car?status='avialable'|/car?status='avialable'&min_price&max_price
 // @desc view all unsold cars
 // @access Public, anyone can view cars
 router.get('/', (req, res) => {
   let { status } = req.query;
-  status = status.toLowerCase();
+  // check for min_price and max_price query params, convert to number type (+)
+  const minPrice = req.query.min_price ? +req.query.min_price : null;
+  const maxPrice = req.query.max_price ? +req.query.max_price : null;
+  status = status ? status.toLowerCase() : null;
   if (status) {
+    if (status === 'available' && minPrice && maxPrice) {
+      return getCar(null, { status, minPrice, maxPrice }, result => res.status(200).json({ status: 200, data: result }),);
+    }
     if (status === 'available') {
       return getCar(null, { status }, result => res.status(200).json({ status: 200, data: result }));
     }
