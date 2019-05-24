@@ -29,6 +29,30 @@ const Cars = [
     email: 'johndoe@gmail.com',
     id: 2,
   },
+  {
+    state: 'used',
+    status: 'sold',
+    price: 1000.5,
+    manufacturer: 'Toyota inc',
+    model: 'Land cruiser',
+    body_type: 'jeep',
+    owner: 3,
+    created_on: '2019-05-19T17:02:53.271Z',
+    email: 'johndoe@gmail.com',
+    id: 3,
+  },
+  {
+    state: 'used',
+    status: 'available',
+    price: 1000.5,
+    manufacturer: 'Toyota inc',
+    model: 'Land cruiser',
+    body_type: 'jeep',
+    owner: 1,
+    created_on: '2019-05-19T17:02:53.271Z',
+    email: 'johndoe@gmail.com',
+    id: 4,
+  },
 ];
 
 const addCar = (carData, cb) => {
@@ -49,7 +73,14 @@ const findCar = (id) => {
 
 const getCar = (id, options = null, cb) => {
   if (options) {
-    // do something with options such as filtering
+    if (options.status && options.min_price && options.max_price) {
+      const match = Cars.filter(
+        car => car.status === options.status && car.price >= options.min_price && car.price <= options.max_price,
+      );
+      return cb(match);
+    }
+    const match = Cars.filter(car => car.status === options.status);
+    return cb(match);
   }
   const { car } = findCar(id);
   return cb(car);
