@@ -177,7 +177,7 @@ describe('Car Order endpoints', () => {
         chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
           chai
             .request(app)
-            .patch('/api/v1/order/1/price')
+            .patch('/api/v1/order/4/price')
             .send({ price: 300000 })
             .set('authorization', `Bearer ${res.body.data.token}`)
             .end((orderErr, orderRes) => {

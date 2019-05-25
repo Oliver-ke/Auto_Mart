@@ -20,7 +20,7 @@ const addUser = (userData, cb) => {
       if (hashErr) throw err;
       userData.password = hash;
       Users.push(userData);
-      const payload = { id: userData.id, email: userData.email };
+      const payload = { id: userData.id, email: userData.email, isAdmin: userData.is_admin };
       // Sign token
       jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (jwtErr, token) => {
         const resData = {
@@ -41,7 +41,7 @@ const findUser = (data, cb) => {
   if (foundUser) {
     bcrypt.compare(data.password, foundUser.password).then((isMatch) => {
       if (isMatch) {
-        const payload = { id: foundUser.id, email: foundUser.email };
+        const payload = { id: foundUser.id, email: foundUser.email, isAdmin: findUser.is_admin };
         // sign token
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
           const resData = {
