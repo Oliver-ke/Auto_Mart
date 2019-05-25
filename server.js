@@ -11,9 +11,16 @@ const users = require('./routes/api/users');
 const car = require('./routes/api/car');
 const carOrder = require('./routes/api/carOrder');
 
+// Api routes
 app.use('/api/v1/auth', users);
 app.use('/api/v1/car', car);
 app.use('/api/v1/order', carOrder);
+
+// API documentation
+app.get('/', (req, res) => {
+  res.redirect('https://app.swaggerhub.com/apis-docs/Oliver-ke/AutoMart/1');
+});
+
 // custom error middleware to prevent  app from breaking entirely
 app.use((req, res, next) => {
   const error = new Error('Route Not Found');
