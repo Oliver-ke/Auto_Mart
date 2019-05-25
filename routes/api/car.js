@@ -3,7 +3,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const carPostValidator = require('../../validators/carPostValidator');
-const { addCar, updateCar, getCar, deleteCar } = require('../../data/Car');
+const { addCar, updateCar, getCar, deleteCar, getAllCars } = require('../../data/Car');
 
 const router = express.Router();
 
@@ -116,7 +116,7 @@ router.get('/', (req, res) => {
 	return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
 });
 
-// @route GET /car
+// @route DELETE /car/{car_id}
 // @desc Admin delete car ads endpoint
 // @access Privat, only admin can delete car ads
 router.delete('/:car_id', authMiddleware, (req, res) => {
@@ -136,5 +136,16 @@ router.delete('/:car_id', authMiddleware, (req, res) => {
 	} else {
 		return res.status(404).json({ status: 404, error: `Car with id ${req.params.car_id} does not exist` });
 	}
+});
+
+// @route GET /car
+// @desc Admin view all car sold or unsold
+// @access Privat, only admin can dview sold and unsold cars
+router.get('/admin/cars', authMiddleware, (req, res) => {
+	const { isAdmin } = req.userData;
+	if (isAdmin) {
+		return getAllCars((cars) => res.status(200).json({ status: 200, data: cars }));
+	}
+	return res.status(401).json({ status: 401, error: 'Access denied, User is not an admin' });
 });
 module.exports = router;

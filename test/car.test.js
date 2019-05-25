@@ -17,7 +17,7 @@ describe('Car endpoint', () => {
           first_name: 'john',
           last_name: 'Doe',
           address: 'block 9 flat two elekahia estate ph',
-          is_admin: true,
+          is_admin: false,
         };
         chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
           const newCarAd = {
@@ -365,6 +365,48 @@ describe('Car endpoint', () => {
           carRes.body.should.have.property('data');
           carRes.body.data.should.be.a('array');
           done();
+        });
+      });
+    });
+  });
+  describe('api/v1/car/admin/cars', () => {
+    describe('GET', () => {
+      it('should get all cars for admin users', (done) => {
+        const user = {
+          email: 'isAdmin@gmail.com',
+          password: 'admin',
+        };
+        chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+          chai
+            .request(app)
+            .get('/api/v1/car/admin/cars')
+            .set('authorization', `Bearer ${res.body.data.token}`)
+            .end((carErr, carRes) => {
+              carRes.should.have.status(200);
+              carRes.body.should.be.a('object');
+              carRes.body.should.have.property('data');
+              carRes.body.data.should.be.a('array');
+              carRes.body.data[3].status.should.equal('sold');
+              done();
+            });
+        });
+      });
+      it('should prevent access to none admin useers', (done) => {
+        const user = {
+          email: 'JohnDoe@gmail.com',
+          password: 'hello',
+        };
+        chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+          chai
+            .request(app)
+            .get('/api/v1/car/admin/cars')
+            .set('authorization', `Bearer ${res.body.data.token}`)
+            .end((carErr, carRes) => {
+              carRes.should.have.status(401);
+              carRes.body.should.be.a('object');
+              carRes.body.should.have.property('error');
+              done();
+            });
         });
       });
     });

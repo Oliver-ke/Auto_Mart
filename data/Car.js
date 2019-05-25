@@ -73,6 +73,8 @@ const addCar = (carData, cb) => {
   cb(carData);
 };
 
+const getAllCars = cb => cb(Cars);
+
 const findCar = (id) => {
   const index = Cars.findIndex(car => car.id === id);
   if (index !== -1) {
@@ -125,4 +127,5 @@ module.exports = {
   getCar,
   updateCar,
   deleteCar,
+  getAllCars,
 };

@@ -41,7 +41,7 @@ const findUser = (data, cb) => {
   if (foundUser) {
     bcrypt.compare(data.password, foundUser.password).then((isMatch) => {
       if (isMatch) {
-        const payload = { id: foundUser.id, email: foundUser.email, isAdmin: findUser.is_admin };
+        const payload = { id: foundUser.id, email: foundUser.email, isAdmin: foundUser.is_admin };
         // sign token
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
           const resData = {
