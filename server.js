@@ -1,10 +1,20 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
+const cloudinary = require('cloudinary');
 require('dotenv').config();
 
 const app = express();
+app.use(fileUpload());
 // setup express body-perser
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// configure cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 // Routes
 const users = require('./routes/api/users');

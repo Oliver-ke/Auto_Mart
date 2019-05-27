@@ -24,8 +24,10 @@
 		"bcryptjs": "^2.4.3",
 		"chai": "^4.2.0",
 		"chai-http": "^4.3.0",
+		"cloudinary": "^1.14.0",
 		"dotenv": "^8.0.0",
 		"express": "^4.16.4",
+		"express-fileupload": "^1.1.4",
 		"gh-pages": "^2.0.1",
 		"jsonwebtoken": "^8.5.1",
 		"validator": "^10.11.0"

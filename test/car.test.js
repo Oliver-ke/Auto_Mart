@@ -402,7 +402,7 @@ describe('Car endpoint', () => {
             .get('/api/v1/car/admin/cars')
             .set('authorization', `Bearer ${res.body.data.token}`)
             .end((carErr, carRes) => {
-              carRes.should.have.status(401);
+              carRes.should.have.status(403);
               carRes.body.should.be.a('object');
               carRes.body.should.have.property('error');
               done();

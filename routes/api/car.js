@@ -4,6 +4,7 @@ const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const carPostValidator = require('../../validators/carPostValidator');
 const { addCar, updateCar, getCar, deleteCar, getAllCars } = require('../../data/Car');
+const uploadToCloudinary = require('../../helper/uploadToCloudinary');
 
 const router = express.Router();
 
@@ -12,10 +13,10 @@ const router = express.Router();
 // @access Private, only authenticated users can create car sale ad
 router.post('/', authMiddleware, (req, res) => {
 	const { errors, isValid } = carPostValidator(req.body);
-
 	if (!isValid) {
 		return res.status(400).json({ status: 400, errors });
 	}
+	const carImg = req.files ? req.files.carImg : null;
 	const newCar = {
 		...req.body,
 		owner: req.userData.id,
@@ -24,8 +25,16 @@ router.post('/', authMiddleware, (req, res) => {
 		price: +req.body.price,
 		status: req.body.status ? req.body.status : 'available'
 	};
-
-	addCar(newCar, (result) => res.status(201).json({ status: 201, data: result }));
+	if (carImg !== null) {
+		uploadToCloudinary(carImg)
+			.then((uploadResult) => {
+				newCar.car_img = uploadResult.secure_url;
+				addCar(newCar, (result) => res.status(201).json({ status: 201, data: result }));
+			})
+			.catch((err) => res.status(500).json({ status: 500, error: err }));
+	} else {
+		addCar(newCar, (result) => res.status(201).json({ status: 201, data: result }));
+	}
 });
 
 // @route PATCH /car/<:car_id>/status
@@ -93,7 +102,7 @@ router.get('/:car_id', (req, res) => {
 	}
 });
 
-// @route GET /car?status=avialable|/car?status=avialable&min_price&max_price
+// @route GET /car?status=avialable | /car?status=avialable&min_price&max_price
 // @desc view all unsold cars
 // @access Public, anyone can view cars
 router.get('/', (req, res) => {
@@ -146,6 +155,6 @@ router.get('/admin/cars', authMiddleware, (req, res) => {
 	if (isAdmin) {
 		return getAllCars((cars) => res.status(200).json({ status: 200, data: cars }));
 	}
-	return res.status(401).json({ status: 401, error: 'Access denied, User is not an admin' });
+	return res.status(403).json({ status: 403, error: 'Access denied, User is not an admin' });
 });
 module.exports = router;
