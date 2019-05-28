@@ -1,10 +1,14 @@
 language: node_js
 node_js:
-    - "stable"
+- stable
 catche:
   directories:
-    - "node_modules"
-
+  - node_modules
 script:
-  - "npm run coverage"
-
+- npm run coverage
+deploy:
+  provider: heroku
+  api_key:
+    secure: DE9MQDikhSN1hzSK1/HleT0uUh7zqJSReQqFjQ20rO3U+dAgpOq2/5GoRtFQh5E+d9g4TxX70/yRZGMopFYp2nZ6R7d/FcGlKZ5FzNC8uuNXomR/b46KNz3z7yRK2mcBLcZ7kdUvNf92MhfUlDD1KCvKCbDD+DPQrYhAibXOAr6j09be3Z7wvnbd+acetDL8yVgEP7wAF7RBqczjOOaOELncIWDM8L+A7wxKdLeqfP/i48BMw9xChEUY+DJ1ttI0kYqMg44Ld1naaMiLqhgqucf0/lhKMr5sPVvbe+uAds5MejDW82pzgldsmDjDpVZ6muX0hZkCk4YLTU0nzs1UyYELVjC8Po7BRTHJJh+Jht8UC77uNMON9S/hUVBPWaYePqJnbi34bnz3ILQwS65ylhOD+N0+FJ3m9zOGBq6DZTpl2kfakxcw/6cPMOp7/wnhEdjplYifxQwLi37PJaCyoW/lBsSfOWL/5cCqnHLF4C2t3yfDLXUD2ZX0q+ygyf2IwLlx34pOIJcRbGw1i+9FJ5pEtbl9ZdqLZgTeavuT4NrjicitOXqrgerjGOyzMPQf8hHfkkkG0Jg43W7xA79cCu1SziRWQyVJikB1gBChz8bWjeLEX+ztKTQilLCQCc1vYql8uhbabAxqt8e13Otvytx8rY+16csAwjnvw2hJaxo=
+  app:
+    develop: auto-mart-ng
