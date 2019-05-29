@@ -110,7 +110,7 @@ const updateCar = (id, userId, key, value, cb) => {
     Cars[index] = update;
     return cb(null, update);
   }
-  return cb(`No car with the give id ${id}`, null);
+  return cb(`No car with the given id ${id}`, null);
 };
 
 const deleteCar = (id, cb) => {

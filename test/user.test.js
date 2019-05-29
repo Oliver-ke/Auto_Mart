@@ -23,7 +23,7 @@ describe('api/v1/auth/signup', () => {
         done();
       });
     });
-    it('Should have a response token', (done) => {
+    it('Should have a response token and status', (done) => {
       const user = {
         email: 'kelechi223@gmail.com',
         password: 'hello',
@@ -34,28 +34,14 @@ describe('api/v1/auth/signup', () => {
       chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
         res.should.have.status(201);
         res.body.should.be.a('object');
-        // res.body.data.is_admin.should.equal(false);
+        res.body.should.have.property('status');
         res.body.data.should.have.property('token');
         done();
       });
     });
-    it('Response should always have a status property', (done) => {
+    it('Should prevent adding users with existing mail', (done) => {
       const user = {
-        email: 'oliver223@gmail.com',
-        password: 'hellopassword',
-        first_name: 'kelech',
-        last_name: 'oliver',
-        address: 'block 9 flat two elekahia estate ph',
-      };
-      chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
-        res.body.should.be.a('object');
-        res.body.should.have.property('status');
-        done();
-      });
-    });
-    it('Should prevent users with existing mail', (done) => {
-      const user = {
-        email: 'oliver223@gmail.com',
+        email: 'kelechi223@gmail.com',
         password: 'hellopassword',
         first_name: 'kelech',
         last_name: 'oliver',
@@ -133,18 +119,6 @@ describe('api/v1/auth/signin', () => {
       };
       chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
         res.should.have.status(401);
-        res.body.should.be.a('object');
-        res.body.should.have.property('error');
-        done();
-      });
-    });
-
-    it('should warn for missing parameters', (done) => {
-      const user = {
-        email: 'kelechi22@gmail.com',
-      };
-      chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
-        res.should.have.status(400);
         res.body.should.be.a('object');
         res.body.should.have.property('error');
         done();

@@ -2,7 +2,8 @@ const cloudinary = require('cloudinary');
 const fs = require('fs');
 const { nameHelper } = require('./fileNamehelper');
 
-module.exports = (file) => {
+module.exports = (reqFile) => {
+  const file = reqFile;
   // change file name to a unique one
   file.name = nameHelper(file.name);
   const path = `${__dirname}/../tempUploads/${file.name}`;
