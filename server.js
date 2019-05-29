@@ -20,11 +20,13 @@ cloudinary.config({
 const users = require('./routes/api/users');
 const car = require('./routes/api/car');
 const carOrder = require('./routes/api/carOrder');
+const flag = require('./routes/api/flag');
 
 // Api routes
 app.use('/api/v1/auth', users);
 app.use('/api/v1/car', car);
 app.use('/api/v1/order', carOrder);
+app.use('/api/v1/flag', flag);
 
 // API documentation
 app.get('/', (req, res) => {
