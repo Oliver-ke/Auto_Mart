@@ -147,7 +147,7 @@ router.delete('/:car_id', authMiddleware, (req, res) => {
   }
 });
 
-// @route GET /car
+// @route GET /car/
 // @desc Admin view all car sold or unsold
 // @access Privat, only admin can dview sold and unsold cars
 router.get('/admin/cars', authMiddleware, (req, res) => {

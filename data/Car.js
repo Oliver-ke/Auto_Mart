@@ -43,7 +43,7 @@ const Cars = [
   },
   {
     state: 'used',
-    status: 'available',
+    status: 'sold',
     price: 1000.5,
     manufacturer: 'Toyota inc',
     model: 'Land cruiser',
@@ -128,4 +128,5 @@ module.exports = {
   updateCar,
   deleteCar,
   getAllCars,
+  findCar,
 };

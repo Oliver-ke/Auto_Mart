@@ -1,6 +1,6 @@
 /* global describe it */
 const { assert } = require('chai');
-const { nameHelper } = require('../helper/fileNamehelper');
+const { nameHelper } = require('../../helper/fileNamehelper');
 
 describe('File name test', () => {
   describe('new names should be unique and extension reserved', () => {

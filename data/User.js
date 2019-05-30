@@ -5,7 +5,16 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // memory data store
-const Users = [];
+const Users = [
+  {
+    first_name: 'uncle',
+    last_name: 'Bob',
+    email: 'test@gmail.com',
+    password: '$2a$10$MSj7YSmDMXe9NzJ63eg0FuflCvgnbFqHX9hZi72gjNPXF/DeuIE8q',
+    id: 1,
+    address: 'GRA phase 2 Port Harcourt Rivers state',
+  },
+];
 // eslint-disable-next-line consistent-return
 
 const signJwt = (userData, cb) => {
@@ -23,6 +32,8 @@ const signJwt = (userData, cb) => {
   });
 };
 const addUser = (userData, cb) => {
+  // change email to lower case to avoid case miss match
+  userData.email = userData.email.toLowerCase();
   const foundUser = Users.find(user => user.email === userData.email);
   if (foundUser) {
     return cb('Error user already exist', foundUser);
@@ -41,6 +52,7 @@ const addUser = (userData, cb) => {
 };
 
 const findUser = (data, cb) => {
+  data.email = data.email.toLowerCase();
   const foundUser = Users.find(user => user.email === data.email);
   if (foundUser) {
     bcrypt.compare(data.password, foundUser.password).then((isMatch) => {
@@ -51,7 +63,7 @@ const findUser = (data, cb) => {
       }
     });
   } else {
-    return cb('Authentication fail', null);
+    return cb('Incorrect email or password', null);
   }
 };
 
