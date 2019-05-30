@@ -30,7 +30,7 @@ app.use('/api/v1/flag', flag);
 
 // API documentation
 app.get('/', (req, res) => {
-  res.redirect('https://app.swaggerhub.com/apis-docs/Oliver-ke/AutoMart/1');
+  res.redirect('https://app.swaggerhub.com/apis-docs/Oliver-ke/Api/v1');
 });
 
 // custom error middleware to prevent  app from breaking entirely

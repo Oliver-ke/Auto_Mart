@@ -36,7 +36,7 @@ router.post('/', authMiddleware, (req, res) => {
         newOrder.price = car.price;
         return addOrder(newOrder, result => res.status(201).json({ status: 201, data: result }));
       }
-      return res.status(400).json({ status: 404, error: 'Car has already been sold' });
+      return res.status(404).json({ status: 404, error: 'Car has already been sold' });
     }
     return res.status(404).json({ status: 404, error: 'Car with the given car_id does not exist' });
   });

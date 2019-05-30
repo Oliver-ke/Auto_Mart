@@ -134,7 +134,7 @@ router.delete('/:car_id', authMiddleware, (req, res) => {
   if (carId) {
     // confirm user is admin
     if (!isAdmin) {
-      return res.status(401).json({ status: 401, error: 'Unauthorized operation' });
+      return res.status(403).json({ status: 403, error: 'Unauthorized operation' });
     }
     deleteCar(carId, (err, successMsg) => {
       if (err) {
