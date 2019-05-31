@@ -5,19 +5,22 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
+
+// Add file upload middleware to receive multipart (file) data on reqest object
 app.use(fileUpload());
-// setup express body-perser
+
+// setup express body-perser for json data
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// configure cloudinary
+// configure cloudinary for image uploads
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
 
-// Routes
+// Routers
 const users = require('./routes/api/users');
 const car = require('./routes/api/car');
 const carOrder = require('./routes/api/carOrder');

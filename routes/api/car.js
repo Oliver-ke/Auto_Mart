@@ -4,9 +4,16 @@ const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const carPostValidator = require('../../validators/carPostValidator');
 const {
- addCar, updateCar, getCar, deleteCar, getAllCars 
+ addCar, updateCar, getCar, deleteCar, getAllCars
 } = require('../../data/Car');
 const uploadToCloudinary = require('../../helper/uploadToCloudinary');
+const {
+  stateMiddleware,
+  statusMiddleware,
+  minMaxMiddleWare,
+  manufactureMiddleware,
+  bodyTypeMiddleware,
+} = require('../middlewares/queryMiddleware');
 
 const router = express.Router();
 
@@ -105,25 +112,17 @@ router.get('/:car_id', (req, res) => {
 });
 
 // @route GET /car?status=avialable | /car?status=avialable&min_price&max_price
-// @desc view all unsold cars
+// @desc view cars using query
 // @access Public, anyone can view cars
-router.get('/', (req, res) => {
-  let { status } = req.query;
-  // check for min_price and max_price query params, convert to number type (+)
-  const minPrice = req.query.min_price ? +req.query.min_price : null;
-  const maxPrice = req.query.max_price ? +req.query.max_price : null;
-  status = status ? status.toLowerCase() : null;
-  if (status) {
-    if (status === 'available' && minPrice && maxPrice) {
-      return getCar(null, { status, minPrice, maxPrice }, result => res.status(200).json({ status: 200, data: result }),);
-    }
-    if (status === 'available') {
-      return getCar(null, { status }, result => res.status(200).json({ status: 200, data: result }));
-    }
-    return res.status(400).json({ status: 400, error: 'status parameter is invalid' });
-  }
-  return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
-});
+router.get(
+  '/',
+  statusMiddleware,
+  minMaxMiddleWare,
+  stateMiddleware,
+  manufactureMiddleware,
+  bodyTypeMiddleware,
+  (req, res) => res.status(400).json({ status: 400, error: 'Invalid query parameters' }),
+);
 
 // @route DELETE /car/{car_id}
 // @desc Admin delete car ads endpoint

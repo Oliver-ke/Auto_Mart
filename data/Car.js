@@ -4,68 +4,7 @@
 // this file contains an interface for manipulating cars
 
 // memory data store with dummy data for testing
-const Cars = [
-  {
-    state: 'new',
-    status: 'available',
-    price: 12300.5,
-    manufacturer: 'Toyota inc',
-    model: 'Honda',
-    body_type: 'car',
-    owner: 1,
-    created_on: '2019-05-19T17:02:53.271Z',
-    email: 'johndoe@gmail.com',
-    id: 1,
-  },
-  {
-    state: 'used',
-    status: 'available',
-    price: 1000.5,
-    manufacturer: 'Toyota inc',
-    model: 'Land cruiser',
-    body_type: 'jeep',
-    owner: 2,
-    created_on: '2019-05-19T17:02:53.271Z',
-    email: 'johndoe@gmail.com',
-    id: 2,
-  },
-  {
-    state: 'used',
-    status: 'sold',
-    price: 1000.5,
-    manufacturer: 'Toyota inc',
-    model: 'Land cruiser',
-    body_type: 'jeep',
-    owner: 3,
-    created_on: '2019-05-19T17:02:53.271Z',
-    email: 'johndoe@gmail.com',
-    id: 3,
-  },
-  {
-    state: 'used',
-    status: 'sold',
-    price: 1000.5,
-    manufacturer: 'Toyota inc',
-    model: 'Land cruiser',
-    body_type: 'jeep',
-    owner: 1,
-    created_on: '2019-05-19T17:02:53.271Z',
-    email: 'johndoe@gmail.com',
-    id: 4,
-  },
-  {
-    state: 'used',
-    status: 'available',
-    price: 1000.5,
-    manufacturer: 'Toyota inc',
-    model: 'Land cruiser',
-    body_type: 'jeep',
-    owner: 5,
-    created_on: '2019-05-19T17:02:53.271Z',
-    email: 'johndoe@gmail.com',
-    id: 5,
-  },
-];
+const Cars = require('./carData');
 
 const addCar = (carData, cb) => {
   carData.id = Cars.length + 1;
@@ -85,12 +24,26 @@ const findCar = (id) => {
   return { index: null, car: null };
 };
 
+const filterCar = (status, key, value) => Cars.filter(car => car[key] === value && car.status === status);
+
 const getCar = (id, options = null, cb) => {
   if (options) {
     if (options.status && options.minPrice && options.maxPrice) {
       const match = Cars.filter(
         car => car.status === options.status && car.price >= options.minPrice && car.price <= options.maxPrice,
       );
+      return cb(match);
+    }
+    if (options.status && options.state) {
+      const match = filterCar(options.status, 'state', options.state);
+      return cb(match);
+    }
+    if (options.status && options.manufacturer) {
+      const match = filterCar(options.status, 'manufacturer', options.manufacturer);
+      return cb(match);
+    }
+    if (options.status && options.bodyType) {
+      const match = filterCar(options.status, 'body_type', options.bodyType);
       return cb(match);
     }
     const match = Cars.filter(car => car.status === options.status);
