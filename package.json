@@ -4,7 +4,7 @@
 	"description": "This project is based of the Andela coding Bootcamp Challenge",
 	"main": "index.js",
 	"scripts": {
-		"test": "mocha --exit || true",
+		"test": "mocha --recursive --exit || true",
 		"coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
 		"deploy": "gh-pages -d UI",
 		"start": "node server.js",
