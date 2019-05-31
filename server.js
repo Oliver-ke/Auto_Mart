@@ -1,6 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -28,27 +29,9 @@ app.use('/api/v1/car', car);
 app.use('/api/v1/order', carOrder);
 app.use('/api/v1/flag', flag);
 
-// API documentation
-app.get('/', (req, res) => {
-  res.redirect('https://app.swaggerhub.com/apis-docs/Oliver-ke/Api/v1');
-});
-
-// custom error middleware to prevent  app from breaking entirely
-app.use((req, res, next) => {
-  const error = new Error('Route Not Found');
-  error.status = 404;
-  next(error);
-});
-
-app.use((error, req, res) => {
-  res.status(error.status || 500);
-  res.json({
-    status: error.status || 500,
-    error: {
-      message: error.message,
-    },
-  });
-});
+// Welcome page
+app.use(express.static('public'));
+app.get('/', (req, res) => res.sendfile(path.resolve(__dirname, 'public', 'index.html')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
