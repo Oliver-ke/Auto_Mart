@@ -1,7 +1,7 @@
-const validator = require('validator');
-const isEmpty = require('./isEmpty');
+import validator from 'validator';
+import isEmpty from './isEmpty';
 
-module.exports = (data) => {
+export default (data) => {
   const errors = {};
   const userData = data;
   userData.first_name = !isEmpty(userData.first_name) ? userData.first_name : '';

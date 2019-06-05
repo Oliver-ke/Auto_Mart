@@ -1,26 +1,26 @@
 /* eslint-disable max-len */
 /* eslint-disable camelcase */
-const express = require('express');
-const authMiddleware = require('../middlewares/authMiddleware');
-const carPostValidator = require('../../validators/carPostValidator');
-const {
- addCar, updateCar, getCar, deleteCar, getAllCars
-} = require('../../data/Car');
-const uploadToCloudinary = require('../../helper/uploadToCloudinary');
-const {
+import express from 'express';
+import authMiddleware from '../middlewares/authMiddleware';
+import carPostValidator from '../../validators/carPostValidator';
+import {
+ addCar, updateCar, getCar, deleteCar, getAllCars 
+} from '../../data/Car';
+import uploadToCloudinary from '../../helper/uploadToCloudinary';
+import {
   stateMiddleware,
   statusMiddleware,
   minMaxMiddleWare,
   manufactureMiddleware,
   bodyTypeMiddleware,
-} = require('../middlewares/queryMiddleware');
+} from '../middlewares/queryMiddleware';
 
 const router = express.Router();
 
 // @route POST /car
 // @desc Create a car sale ad
 // @access Private, only authenticated users can create car sale ad
-router.post('/', authMiddleware, (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   const { errors, isValid } = carPostValidator(req.body);
   if (!isValid) {
     return res.status(400).json({ status: 400, errors });
@@ -35,15 +35,17 @@ router.post('/', authMiddleware, (req, res) => {
     status: req.body.status ? req.body.status : 'available',
   };
   if (carImg !== null) {
-    uploadToCloudinary(carImg)
-      .then((uploadResult) => {
-        newCar.car_img = uploadResult.secure_url;
-        addCar(newCar, result => res.status(201).json({ status: 201, data: result }));
-      })
-      .catch(err => res.status(500).json({ status: 500, error: err }));
-  } else {
-    addCar(newCar, result => res.status(201).json({ status: 201, data: result }));
+    try {
+      const uploadResult = await uploadToCloudinary(carImg);
+      newCar.car_img = uploadResult.secure_url;
+      const result = addCar(newCar);
+      return res.status(201).json({ status: 201, data: result });
+    } catch (err) {
+      return res.status(500).json({ status: 500, error: err });
+    }
   }
+  const result = addCar(newCar);
+  return res.status(201).json({ status: 201, data: result });
 });
 
 // @route PATCH /car/<:car_id>/status
@@ -59,15 +61,13 @@ router.patch('/:car_id/status', authMiddleware, (req, res) => {
     if (!car_id) {
       return res.status(400).json({ status: 400, error: 'Car_id must be a number' });
     }
-    updateCar(car_id, userId, 'status', status, (err, updatedCar) => {
-      if (!err) {
-        return res.status(200).json({ status: 200, data: updatedCar });
-      }
-      return res.status(400).json({ status: 400, error: err });
-    });
-  } else {
-    return res.status(400).json({ status: 400, error: 'status can either be sold or available' });
+    const result = updateCar(car_id, userId, 'status', status);
+    if (!result.error) {
+      return res.status(200).json({ status: 200, data: result.update });
+    }
+    return res.status(400).json({ status: 400, error: result.error });
   }
+  return res.status(400).json({ status: 400, error: 'status can either be sold or available' });
 });
 
 // @route PATCH /car/<:car_id>/price
@@ -81,15 +81,13 @@ router.patch('/:car_id/price', authMiddleware, (req, res) => {
   price = +price;
   const userId = req.userData.id;
   if (price && car_id) {
-    updateCar(car_id, userId, 'price', price, (err, updatedCar) => {
-      if (!err) {
-        return res.status(200).json({ status: 200, data: updatedCar });
-      }
-      return res.status(400).json({ status: 400, error: err });
-    });
-  } else {
-    return res.status(400).json({ status: 400, error: 'car_id and price must be a number type' });
+    const result = updateCar(car_id, userId, 'price', price);
+    if (!result.error) {
+      return res.status(200).json({ status: 200, data: result.update });
+    }
+    return res.status(400).json({ status: 400, error: result.error });
   }
+  return res.status(400).json({ status: 400, error: 'car_id and price must be a number type' });
 });
 
 // @route GET /car/<:car_id>
@@ -100,15 +98,13 @@ router.get('/:car_id', (req, res) => {
   // parse car_id to number type
   car_id = +car_id;
   if (car_id) {
-    getCar(car_id, null, (result) => {
-      if (!result) {
-        return res.status(404).json({ status: 404, error: `car with id ${car_id} does not exist` });
-      }
-      return res.status(200).json({ status: 200, data: result });
-    });
-  } else {
-    return res.status(400).json({ status: 400, error: 'car_id should be a number type' });
+    const result = getCar(car_id, null);
+    if (!result) {
+      return res.status(404).json({ status: 404, error: `car with id ${car_id} does not exist` });
+    }
+    return res.status(200).json({ status: 200, data: result });
   }
+  return res.status(400).json({ status: 400, error: 'car_id should be a number type' });
 });
 
 // @route GET /car?status=avialable | /car?status=avialable&min_price&max_price
@@ -135,15 +131,13 @@ router.delete('/:car_id', authMiddleware, (req, res) => {
     if (!isAdmin) {
       return res.status(403).json({ status: 403, error: 'Unauthorized operation' });
     }
-    deleteCar(carId, (err, successMsg) => {
-      if (err) {
-        return res.status(404).json({ status: 404, error: err });
-      }
-      return res.status(200).json({ status: 200, data: successMsg });
-    });
-  } else {
-    return res.status(404).json({ status: 404, error: `Car with id ${req.params.car_id} does not exist` });
+    const result = deleteCar(carId);
+    if (!result.error) {
+      return res.status(200).json({ status: 200, data: result.success });
+    }
+    return res.status(404).json({ status: 404, error: result.error });
   }
+  return res.status(404).json({ status: 404, error: `Car with id ${req.params.car_id} does not exist` });
 });
 
 // @route GET /car/
@@ -152,8 +146,9 @@ router.delete('/:car_id', authMiddleware, (req, res) => {
 router.get('/admin/cars', authMiddleware, (req, res) => {
   const { isAdmin } = req.userData;
   if (isAdmin) {
-    return getAllCars(cars => res.status(200).json({ status: 200, data: cars }));
+    const result = getAllCars();
+    return res.status(200).json({ status: 200, data: result });
   }
   return res.status(403).json({ status: 403, error: 'Access denied, User is not an admin' });
 });
-module.exports = router;
+export default router;

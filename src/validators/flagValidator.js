@@ -1,7 +1,7 @@
-const validator = require('validator');
-const isEmpty = require('./isEmpty');
+import validator from 'validator';
+import isEmpty from './isEmpty';
 
-module.exports = (flagData) => {
+export default (flagData) => {
   const errors = {};
   const data = flagData;
   data.car_id = !isEmpty(data.car_id) ? data.car_id : '';

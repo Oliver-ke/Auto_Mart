@@ -1,9 +1,10 @@
-const express = require('express');
-const authMiddleware = require('../middlewares/authMiddleware');
+import express from 'express';
+import authMiddleware from '../middlewares/authMiddleware';
+import flagInputValitator from '../../validators/flagValidator';
+import { addFlag } from '../../data/Flag';
 
 const router = express.Router();
-const flagInputValitator = require('../../validators/flagValidator');
-const { addFlag } = require('../../data/Flag');
+
 // @route POST /flag
 // @desc flag car post as fraudulent
 // @access Private, only registered user can send flag report
@@ -19,7 +20,8 @@ router.post('/', authMiddleware, (req, res) => {
     reason: req.body.reason,
     description: req.body.description,
   };
-  addFlag(newFlag, data => res.status(201).json({ status: 201, data }));
+  const result = addFlag(newFlag);
+  return res.status(201).json({ status: 201, result });
 });
 
-module.exports = router;
+export default router;

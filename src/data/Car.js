@@ -4,15 +4,15 @@
 // this file contains an interface for manipulating cars
 
 // memory data store with dummy data for testing
-const Cars = require('./carData');
+import Cars from './carData';
 
-const addCar = (carData, cb) => {
+export const addCar = (carData) => {
   carData.id = Cars.length + 1;
   Cars.push(carData);
-  cb(carData);
+  return carData;
 };
 
-const getAllCars = cb => cb(Cars);
+export const getAllCars = () => Cars;
 
 const findCar = (id) => {
   const index = Cars.findIndex(car => car.id === id);
@@ -26,60 +26,51 @@ const findCar = (id) => {
 
 const filterCar = (status, key, value) => Cars.filter(car => car[key] === value && car.status === status);
 
-const getCar = (id, options = null, cb) => {
+export const getCar = (id, options = null) => {
   if (options) {
     if (options.status && options.minPrice && options.maxPrice) {
       const match = Cars.filter(
         car => car.status === options.status && car.price >= options.minPrice && car.price <= options.maxPrice,
       );
-      return cb(match);
+      return match;
     }
     if (options.status && options.state) {
       const match = filterCar(options.status, 'state', options.state);
-      return cb(match);
+      return match;
     }
     if (options.status && options.manufacturer) {
       const match = filterCar(options.status, 'manufacturer', options.manufacturer);
-      return cb(match);
+      return match;
     }
     if (options.status && options.bodyType) {
       const match = filterCar(options.status, 'body_type', options.bodyType);
-      return cb(match);
+      return match;
     }
     const match = Cars.filter(car => car.status === options.status);
-    return cb(match);
+    return match;
   }
   const { car } = findCar(id);
-  return cb(car);
+  return car;
 };
 
-const updateCar = (id, userId, key, value, cb) => {
+export const updateCar = (id, userId, key, value) => {
   const { car, index } = findCar(id);
   if (car) {
     if (car.owner !== userId) {
-      return cb(`Current users has no car with id ${id}`, null);
+      return { error: `Current users has no car with id ${id}`, update: null };
     }
     const update = { ...car, [key]: value };
     Cars[index] = update;
-    return cb(null, update);
+    return { error: null, update };
   }
-  return cb(`No car with the given id ${id}`, null);
+  return { error: `No car with the given id ${id}`, update: null };
 };
 
-const deleteCar = (id, cb) => {
+export const deleteCar = (id) => {
   const { index } = findCar(id);
   if (index !== null) {
     Cars.splice(index, 1);
-    return cb(null, 'Car ad successfully deleted');
+    return { error: null, success: 'Car ad successfully deleted' };
   }
-  return cb(`Car with id ${id} does not exist`, null);
-};
-
-module.exports = {
-  addCar,
-  getCar,
-  updateCar,
-  deleteCar,
-  getAllCars,
-  findCar,
+  return { error: `Car with id ${id} does not exist`, success: null };
 };

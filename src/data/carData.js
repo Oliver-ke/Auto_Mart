@@ -1,6 +1,6 @@
 // this is a dummy car data for testing
 
-module.exports = [
+const Cars = [
   {
     state: 'new',
     status: 'available',
@@ -74,3 +74,5 @@ module.exports = [
     id: 6,
   },
 ];
+
+export default Cars;

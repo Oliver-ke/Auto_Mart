@@ -25,10 +25,10 @@ const Orders = [
   },
 ];
 
-const addOrder = (orderData, cb) => {
+const addOrder = (orderData) => {
   orderData.id = Orders.length + 1;
   Orders.push(orderData);
-  return cb(orderData);
+  return orderData;
 };
 
 const findOrder = (id) => {
@@ -41,7 +41,7 @@ const findOrder = (id) => {
   return null;
 };
 
-const updateOrder = (id, userId, newPrice, cb) => {
+const updateOrder = (id, userId, newPrice) => {
   // check if the order exist
   const { order, index } = findOrder(id);
   if (order) {
@@ -57,16 +57,13 @@ const updateOrder = (id, userId, newPrice, cb) => {
         };
         Orders[index] = update;
 
-        return cb(null, update);
+        return { error: null, update };
       }
-      return cb('User Id does not match order owner id');
+      return { error: 'User Id does not match order owner id', update: null };
     }
-    return cb('Order status is not pending', null);
+    return { error: 'Order status is not pending', update: null };
   }
-  return cb(`Order with id ${id} does not exist`, null);
+  return { error: `Order with id ${id} does not exist`, update: null };
 };
 
-module.exports = {
-  addOrder,
-  updateOrder,
-};
+export { addOrder, updateOrder };
