@@ -1,6 +1,6 @@
 /* global describe it */
-const { assert } = require('chai');
-const isEmpty = require('../../validators/isEmpty');
+import { assert } from 'chai';
+import isEmpty from '../../src/validators/isEmpty';
 
 describe('Test for isEmpty', () => {
   it('should return true for empty object,string or array', () => {

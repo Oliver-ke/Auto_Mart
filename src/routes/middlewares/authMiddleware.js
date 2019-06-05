@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   // verify users token on request header before proceeding request
   try {
     const token = req.headers.authorization.split(' ')[1];

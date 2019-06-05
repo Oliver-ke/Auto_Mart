@@ -2,8 +2,8 @@
 /* eslint-disable no-param-reassign */
 
 // this file contains an interface for manipulating users
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 // memory data store
 const Users = [
   {
@@ -17,57 +17,58 @@ const Users = [
 ];
 // eslint-disable-next-line consistent-return
 
-const signJwt = (userData, cb) => {
+// the function generate json web token for authentication
+const signJwt = async (userData) => {
   const payload = { id: userData.id, email: userData.email, isAdmin: userData.is_admin };
-  // Sign token
-  jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (jwtErr, token) => {
-    const resData = {
+  try {
+    const token = await jwt.sign(payload, process.env.JWT_SECRET);
+    const user = {
       first_name: userData.first_name,
       last_name: userData.last_name,
       id: userData.id,
       email: userData.email,
       token,
     };
-    return cb(jwtErr, resData);
-  });
+    return { error: null, user };
+  } catch (err) {
+    return { error: err, user: null };
+  }
 };
-const addUser = (userData, cb) => {
+export const addUser = async (userData) => {
   // change email to lower case to avoid case miss match
   userData.email = userData.email.toLowerCase();
   const foundUser = Users.find(user => user.email === userData.email);
   if (foundUser) {
-    return cb('Error user already exist', foundUser);
+    return { error: 'Error user already exist', user: null };
   }
   // geting here then no user with the email exist
   // hash password and add user
   userData.id = Users.length + 1;
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(userData.password, salt, (hashErr, hash) => {
-      if (hashErr) throw err;
-      userData.password = hash;
-      Users.push(userData);
-      signJwt(userData, cb);
-    });
-  });
-};
-
-const findUser = (data, cb) => {
-  data.email = data.email.toLowerCase();
-  const foundUser = Users.find(user => user.email === data.email);
-  if (foundUser) {
-    bcrypt.compare(data.password, foundUser.password).then((isMatch) => {
-      if (isMatch) {
-        signJwt(foundUser, cb);
-      } else {
-        return cb('Incorrect email or password', null);
-      }
-    });
-  } else {
-    return cb('Incorrect email or password', null);
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(userData.password, salt);
+    userData.password = hash;
+    Users.push(userData);
+    return signJwt(userData);
+  } catch (err) {
+    return { error: err, user: null };
   }
 };
 
-module.exports = {
-  addUser,
-  findUser,
+export const findUser = async (data) => {
+  data.email = data.email.toLowerCase();
+  const foundUser = Users.find(user => user.email === data.email);
+  if (foundUser) {
+    try {
+      const isMatch = await bcrypt.compare(data.password, foundUser.password);
+      if (isMatch) {
+        return signJwt(foundUser);
+      }
+      return { error: 'Incorrect email or password', user: null };
+    } catch (err) {
+      return { error: err, user: null };
+    }
+  } else {
+    return { error: 'Incorrect email or password', user: null };
+  }
 };

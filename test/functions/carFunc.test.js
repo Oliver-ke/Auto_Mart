@@ -1,8 +1,6 @@
 /* global describe it */
-const { assert } = require('chai');
-const {
- updateCar, getAllCars, getCar, deleteCar 
-} = require('../../data/Car');
+import { assert } from 'chai';
+import { getCar, deleteCar } from '../../src/data/Car';
 
 describe('Car store function test', () => {
   describe('Delete car function', () => {

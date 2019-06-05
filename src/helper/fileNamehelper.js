@@ -9,6 +9,4 @@ const nameHelper = (fileName) => {
   return `image_${uploadDate}${seconds}${number1}${number2}.${mimeType}`;
 };
 
-module.exports = {
-  nameHelper,
-};
+export default nameHelper;

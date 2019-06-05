@@ -5,7 +5,7 @@
 
 // memory data store
 const Flag = [];
-const addFlag = (flagData, cb) => {
+const addFlag = (flagData) => {
   const data = flagData;
   data.id = Flag.length + 1;
   Flag.push(data);
@@ -15,9 +15,7 @@ const addFlag = (flagData, cb) => {
     reason: data.reason,
     description: data.description,
   };
-  cb(resData);
+  return resData;
 };
 
-module.exports = {
-  addFlag,
-};
+export { addFlag };

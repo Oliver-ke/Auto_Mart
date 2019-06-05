@@ -1,10 +1,17 @@
-const express = require('express');
-const fileUpload = require('express-fileupload');
-const cloudinary = require('cloudinary');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import fileUpload from 'express-fileupload';
+import cloudinary from 'cloudinary';
+import path from 'path';
+import dotenv from 'dotenv';
+
+// Routers
+import users from './routes/api/users';
+import car from './routes/api/car';
+import carOrder from './routes/api/carOrder';
+import flag from './routes/api/flag';
 
 const app = express();
+dotenv.config();
 
 // Add file upload middleware to receive multipart (file) data on reqest object
 app.use(fileUpload());
@@ -19,12 +26,6 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
-
-// Routers
-const users = require('./routes/api/users');
-const car = require('./routes/api/car');
-const carOrder = require('./routes/api/carOrder');
-const flag = require('./routes/api/flag');
 
 // Api routes
 app.use('/api/v1/auth', users);
@@ -41,4 +42,4 @@ app.listen(PORT, () => {
   console.log('app running on port', PORT);
 });
 
-module.exports = app;
+export default app;

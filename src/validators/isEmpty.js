@@ -1,7 +1,7 @@
 /* eslint-disable no-tabs */
 
 // this exports a function that return true if a an object, array or any value is empty
-module.exports = (value) => {
+export default (value) => {
   if (
     value === undefined
 		|| value === null
