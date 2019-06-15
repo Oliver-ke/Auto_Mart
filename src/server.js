@@ -3,6 +3,7 @@ import fileUpload from 'express-fileupload';
 import cloudinary from 'cloudinary';
 import path from 'path';
 import dotenv from 'dotenv';
+import initializeDb from './db/initDb';
 
 // Routers
 import users from './routes/api/users';
@@ -20,11 +21,14 @@ app.use(fileUpload());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Initialize db, create tables if not present
+initializeDb();
+
 // configure cloudinary for image uploads
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.API_KEY,
+	api_secret: process.env.API_SECRET
 });
 
 // Api routes
@@ -39,7 +43,7 @@ app.get('/', (req, res) => res.sendfile(path.resolve(__dirname, 'public', 'index
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log('app running on port', PORT);
+	console.log('app running on port', PORT);
 });
 
 export default app;
