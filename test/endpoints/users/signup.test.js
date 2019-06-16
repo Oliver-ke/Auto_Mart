@@ -3,19 +3,26 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../../src/server';
+import initializeDb from '../../../src/db/initDb';
+import pool from '../../../src/db/index';
 
 chai.use(chaiHttp);
 chai.should();
+
 describe('api/v1/auth/signup', () => {
   describe('POST', () => {
+    it('Initialize db and clear priv data', async () => {
+      await pool.clearDb();
+      const res = await initializeDb();
+      chai.assert.isTrue(res);
+    });
     it('should add a user', (done) => {
       const user = {
-        email: 'kelechi22@gmail.com',
-        password: 'hello',
-        first_name: 'kelech',
-        last_name: 'oliver',
+        email: 'uncleboob@gmail.com',
+        password: 'password',
+        first_name: 'Boob',
+        last_name: 'John',
         address: 'block 9 flat two elekahia estate ph',
-        is_admin: true,
       };
       chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
         res.should.have.status(201);
@@ -25,10 +32,10 @@ describe('api/v1/auth/signup', () => {
     });
     it('Should have a response token and status', (done) => {
       const user = {
-        email: 'kelechi223@gmail.com',
-        password: 'hello',
-        first_name: 'kelech',
-        last_name: 'oliver',
+        email: 'JohnDoe@gmail.com',
+        password: 'password',
+        first_name: 'Doe',
+        last_name: 'John',
         address: 'block 9 flat two elekahia estate ph',
       };
       chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
@@ -41,7 +48,7 @@ describe('api/v1/auth/signup', () => {
     });
     it('Should prevent adding users with existing mail', (done) => {
       const user = {
-        email: 'kelechi223@gmail.com',
+        email: 'JohnDoe@gmail.com',
         password: 'hellopassword',
         first_name: 'kelech',
         last_name: 'oliver',
@@ -97,3 +104,15 @@ describe('api/v1/auth/signup', () => {
     });
   });
 });
+
+// beforeEach(async function () {
+//   await db.clear();
+//   await db.save([tobi, loki, jane]);
+// });
+
+// describe('#find()', function () {
+//   it('responds with matching records', async function () {
+//     const users = await db.find({ type: 'User' });
+//     users.should.have.length(3);
+//   });
+// });

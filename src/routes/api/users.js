@@ -1,12 +1,15 @@
 /* eslint-disable consistent-return */
 import express from 'express';
-
+import bcrypt from 'bcryptjs';
 // Input validation
 import validateSignUpRequest from '../../validators/signUpValidator';
 import validateSignInRequest from '../../validators/signInValidator';
 
+import signJWT from '../../helper/signJWT';
+
 // User memory storage interface
-import { addUser, findUser } from '../../data/User';
+import { findUser } from '../../data/User';
+import { addUser } from '../../db/queries/user';
 
 const router = express.Router();
 
@@ -27,11 +30,24 @@ router.post('/signup', async (req, res) => {
     address: req.body.address,
     is_admin: typeof req.body.is_admin === 'boolean' ? req.body.is_admin : false,
   };
-  const result = await addUser(newUser);
-  if (!result.error) {
-    return res.status(201).json({ status: 201, data: result.user });
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newUser.password, salt);
+    newUser.password = hash;
+    // try adding user, errors if email already exist
+    const { error } = await addUser(newUser);
+    if (!error) {
+      const { user } = await signJWT(newUser);
+      return res.status(201).json({ status: 201, data: user });
+    }
+    if (error === 'duplicate key value violates unique constraint "users_email_key"') {
+      return res.status(400).json({ status: 400, error: 'Email already exist' });
+    }
+    return res.status(500).json({ status: 500, error: 'Server Error' });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ status: 500, error: 'Server Error' });
   }
-  return res.status(400).json({ status: 400, error: result.error });
 });
 
 // @route POST /auth/signin
