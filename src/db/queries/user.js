@@ -19,10 +19,12 @@ export const addUser = async (userData) => {
 };
 
 // Gets a user
-export const getUser = async (id) => {
+export const getUser = async (condition) => {
+  const value = Object.values(condition);
+  const key = Object.keys(condition).toString();
   const query = {
-    text: 'SELECT * FROM users WHERE id=$1',
-    values: [id],
+    text: ` SELECT * FROM orders WHERE  ${key}=$1`,
+    values: value,
   };
   try {
     const { rows } = await pool.query(query);

@@ -41,14 +41,15 @@ export default async () => {
   try {
     // check db for response
     await pool.query('SELECT NOW()');
-
     // create tables
     await pool.query(userTable);
     await pool.query(carTable);
     await pool.query(orderTable);
     console.log('Database connected with tables');
+    return true;
   } catch (error) {
     console.error(error.message);
+    return false;
     process.exit(1);
   }
 };
