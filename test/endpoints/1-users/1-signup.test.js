@@ -1,4 +1,5 @@
-/* the file naming convention adopted here was to dictects the execution order, as some action needs to be
+/* the file naming convention adopted here was to dictects
+ the execution order, as some action needs to be
 carried out before others, eg signup -> login
 */
 
