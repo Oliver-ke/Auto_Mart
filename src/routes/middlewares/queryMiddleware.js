@@ -1,4 +1,4 @@
-import { getCar } from '../../data/Car';
+import { getCar, getUnsoldCars } from '../../db/queries/car';
 
 export const minMaxMiddleWare = (req, res, next) => {
   let { status } = req.query;
@@ -46,7 +46,7 @@ export const bodyTypeMiddleware = (req, res, next) => {
   return next();
 };
 
-export const statusMiddleware = (req, res, next) => {
+export const statusMiddleware = async (req, res, next) => {
   let { status } = req.query;
   status = status ? status.toLowerCase() : null;
   if (status !== 'available') {
@@ -55,6 +55,6 @@ export const statusMiddleware = (req, res, next) => {
   if (status === 'available' && Object.keys(req.query).length > 1) {
     return next();
   }
-  const result = getCar(null, { status });
+  const { result } = await getUnsoldCars();
   return res.status(200).json({ status: 200, data: result });
 };
