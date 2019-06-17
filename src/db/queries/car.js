@@ -55,7 +55,7 @@ export const updateCar = async (id, update) => {
 };
 
 // Get a specific car {e.g {owner: 1}
-export const getSpecCar = async (condition) => {
+export const getCar = async (condition) => {
   const value = Object.values(condition);
   const key = Object.keys(condition).toString();
   const query = {

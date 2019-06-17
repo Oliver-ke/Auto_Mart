@@ -8,7 +8,7 @@ import initializeDb from './db/initDb';
 // Routers
 import users from './routes/api/users';
 import car from './routes/api/car';
-import carOrder from './routes/api/carOrder';
+import carOrder from './routes/api/order';
 import flag from './routes/api/flag';
 
 const app = express();
