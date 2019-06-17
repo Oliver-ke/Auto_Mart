@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable max-len */
 /* eslint-disable camelcase */
 import express from 'express';
@@ -84,21 +85,28 @@ router.patch('/:car_id/status', authMiddleware, async (req, res) => {
 // @route PATCH /car/<:car_id>/price
 // @desc Update car price
 // @access Private, only authenticated users can update price
-router.patch('/:car_id/price', authMiddleware, (req, res) => {
-  let { car_id } = req.params;
+router.patch('/:car_id/price', authMiddleware, async (req, res) => {
+  const { car_id } = req.params;
   let { price } = req.body;
-  // parse id to number type
-  car_id = +car_id;
-  price = +price;
-  const userId = req.userData.id;
-  if (price && car_id) {
-    const result = updateCar(car_id, userId, 'price', price);
-    if (!result.error) {
-      return res.status(200).json({ status: 200, data: result.update });
+  // parse price to number type
+  price = isNaN(+price) ? null : +price;
+  const userId = +req.userData.id;
+  if (car_id && price) {
+    const { result: car } = await getCar({ id: car_id });
+    if (!car) {
+      return res.status(404).json({ status: 404, error: 'Not found' });
     }
-    return res.status(400).json({ status: 400, error: result.error });
+    if (car.owner !== userId) {
+      return res.status(403).json({ status: 403, error: 'Access denied' });
+    }
+    const { error, result } = await updateCar(car_id, { price });
+    if (!error) {
+      result.price = +result.price;
+      return res.status(200).json({ status: 200, data: result });
+    }
+    return res.status(500).json({ status: 500, error: 'Server error' });
   }
-  return res.status(400).json({ status: 400, error: 'car_id and price must be a number type' });
+  return res.status(400).json({ status: 400, error: 'Invalid request parameter(s) price' });
 });
 
 // @route GET /car/<:car_id>
