@@ -4,21 +4,21 @@ import pool from '../index';
 export const addCar = async (carData) => {
   const values = Object.values(carData);
   const columns = Object.keys(carData).toString();
-  let rows;
+  let fields;
   if (carData.img_url) {
-    rows = '$1, $2, $3, $4, $5, $6, $7, $8, $9';
+    fields = '$1, $2, $3, $4, $5, $6, $7, $8, $9, $10';
   } else {
-    rows = '$1, $2, $3, $4, $5, $6, $7, $8';
+    fields = '$1, $2, $3, $4, $5, $6, $7, $8, $9';
   }
   const query = {
     text: `INSERT INTO cars(
       ${columns}
-    ) VALUES(${rows})`,
+    ) VALUES(${fields}) RETURNING *`,
     values,
   };
   try {
-    const { rowCount } = await pool.query(query);
-    return { error: null, result: rowCount };
+    const { rows } = await pool.query(query);
+    return { error: null, result: rows[0] };
   } catch (error) {
     return { error: error.message, result: null };
   }
@@ -54,11 +54,13 @@ export const updateCar = async (id, update) => {
   }
 };
 
-// Get a specific car
-export const getCar = async (id) => {
+// Get a specific car {e.g {owner: 1}
+export const getSpecCar = async (condition) => {
+  const value = Object.values(condition);
+  const key = Object.keys(condition).toString();
   const query = {
-    text: 'SELECT * FROM cars WHERE id=$1',
-    values: [id],
+    text: `SELECT * FROM cars WHERE ${key}=$1`,
+    values: value,
   };
   try {
     const { rows } = await pool.query(query);
