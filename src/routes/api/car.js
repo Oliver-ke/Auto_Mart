@@ -112,12 +112,10 @@ router.patch('/:car_id/price', authMiddleware, async (req, res) => {
 // @route GET /car/<:car_id>
 // @desc get a specific car
 // @access Public, anyone can view specific car
-router.get('/:car_id', (req, res) => {
-  let { car_id } = req.params;
-  // parse car_id to number type
-  car_id = +car_id;
+router.get('/:car_id', async (req, res) => {
+  const { car_id } = req.params;
   if (car_id) {
-    const result = getCar(car_id, null);
+    const { result } = await getCar({ id: car_id });
     if (!result) {
       return res.status(404).json({ status: 404, error: `car with id ${car_id} does not exist` });
     }
