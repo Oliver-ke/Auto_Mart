@@ -24,12 +24,12 @@ export const updateOrder = async (id, update) => {
   const key = Object.keys(update).toString();
   const value = Object.values(update).toString();
   const query = {
-    text: `UPDATE orders SET ${key}=$2 WHERE id=$1`,
+    text: `UPDATE orders SET ${key}=$2 WHERE id=$1 RETURNING *`,
     values: [id, value],
   };
   try {
-    const { rowCount } = await pool.query(query);
-    return { error: null, result: rowCount };
+    const { rows } = await pool.query(query);
+    return { error: null, result: rows[0] };
   } catch (error) {
     return { error: error.message };
   }
