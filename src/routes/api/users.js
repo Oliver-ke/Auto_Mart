@@ -34,9 +34,9 @@ router.post('/signup', async (req, res) => {
     const hash = await bcrypt.hash(newUser.password, salt);
     newUser.password = hash;
     // try adding user, errors if email already exist
-    const { error } = await addUser(newUser);
+    const { error, result } = await addUser(newUser);
     if (!error) {
-      const { user } = await signJWT(newUser);
+      const { user } = await signJWT(result);
       return res.status(201).json({ status: 201, data: user });
     }
     if (error === 'duplicate key value violates unique constraint "users_email_key"') {

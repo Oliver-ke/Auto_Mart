@@ -6,12 +6,13 @@ const carTable = `CREATE TABLE IF NOT EXISTS
         owner INT NOT NULL REFERENCES users(id),
         created_on DATE NOT NULL,
         state VARCHAR(20) NOT NULL,
+        email VARCHAR(100) NOT NULL,
         status VARCHAR(20) NOT NULL,
         price NUMERIC NOT NULL,
         manufacturer VARCHAR(100) NOT NULL,
         model VARCHAR(100) NOT NULL,
         body_type VARCHAR(100) NOT NULL,
-        img_url VARCHAR(100)
+        img_url VARCHAR(250)
       )`;
 
 const orderTable = `CREATE TABLE IF NOT EXISTS
@@ -50,6 +51,5 @@ export default async () => {
   } catch (error) {
     console.error(error.message);
     return false;
-    process.exit(1);
   }
 };

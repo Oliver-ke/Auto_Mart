@@ -4,8 +4,9 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
- addCar, updateCar, getCar, deleteCar, getAllCars 
+ updateCar, getCar, deleteCar, getAllCars 
 } from '../../data/Car';
+import { addCar } from '../../db/queries/car';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
   stateMiddleware,
@@ -34,18 +35,22 @@ router.post('/', authMiddleware, async (req, res) => {
     price: +req.body.price,
     status: req.body.status ? req.body.status : 'available',
   };
-  if (carImg !== null) {
-    try {
+
+  try {
+    if (carImg !== null) {
       const uploadResult = await uploadToCloudinary(carImg);
-      newCar.car_img = uploadResult.secure_url;
-      const result = addCar(newCar);
-      return res.status(201).json({ status: 201, data: result });
-    } catch (err) {
-      return res.status(500).json({ status: 500, error: err });
+      newCar.img_url = uploadResult.secure_url;
     }
+    const { error, result } = await addCar(newCar);
+    if (!error) {
+      result.price = +result.price;
+      return res.status(201).json({ status: 201, data: result });
+    }
+    console.log(error, req.userData.id);
+    return res.status(400).json({ status: 400, error: 'Invalid parameters' });
+  } catch (err) {
+    return res.status(500).json({ status: 500, error: 'Server Error' });
   }
-  const result = addCar(newCar);
-  return res.status(201).json({ status: 201, data: result });
 });
 
 // @route PATCH /car/<:car_id>/status

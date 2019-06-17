@@ -15,8 +15,13 @@ if (process.env.NODE_ENV === 'production') {
 
 export default {
   query: async (text, params) => {
-    const res = await pool.query(text, params);
-    return res;
+    const client = await pool.connect();
+    try {
+      const res = await client.query(text, params);
+      return res;
+    } finally {
+      client.release();
+    }
   },
   clearDb: async () => {
     await pool.query('DROP TABLE IF EXISTS orders,cars,users CASCADE');
@@ -24,3 +29,9 @@ export default {
 };
 
 // eyes up unresolve promises might arise
+/*
+query2: async (text, params) => {
+    const res = await pool.query(text, params);
+    return res;
+  },
+*/

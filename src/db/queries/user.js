@@ -7,12 +7,12 @@ export const addUser = async (userData) => {
   const query = {
     text: `INSERT INTO users(
       ${columns}
-    ) VALUES($1, $2, $3, $4, $5, $6)`,
+    ) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`,
     values,
   };
   try {
-    const { rowCount } = await pool.query(query);
-    return { error: null, result: rowCount };
+    const { rows } = await pool.query(query);
+    return { error: null, result: rows[0] };
   } catch (error) {
     return { error: error.message, result: null };
   }
