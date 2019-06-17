@@ -23,21 +23,16 @@ export const getUser = async (condition) => {
   const value = Object.values(condition);
   const key = Object.keys(condition).toString();
   const query = {
-    text: ` SELECT * FROM orders WHERE  ${key}=$1`,
+    text: ` SELECT * FROM users WHERE  ${key}=$1`,
     values: value,
   };
   try {
     const { rows } = await pool.query(query);
     return { error: null, result: rows[0] };
   } catch (error) {
-    return { error: error.message };
+    return { error: error.message, result: null };
   }
 };
-
-/*
-error: 'duplicate key value violates unique constraint "users_email_key"'
-
-*/
 
 // Detete User;
 export const deleteUser = async (id) => {

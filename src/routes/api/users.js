@@ -7,9 +7,8 @@ import validateSignInRequest from '../../validators/signInValidator';
 
 import signJWT from '../../helper/signJWT';
 
-// User memory storage interface
-import { findUser } from '../../data/User';
-import { addUser } from '../../db/queries/user';
+// db query functions
+import { addUser, getUser } from '../../db/queries/user';
 
 const router = express.Router();
 
@@ -52,17 +51,30 @@ router.post('/signup', async (req, res) => {
 
 // @route POST /auth/signin
 // @desc login to user account
-// @access Public
+// @access Private -> Only registered users can signin
 router.post('/signin', async (req, res) => {
   const { errors, isValid } = validateSignInRequest(req.body);
   if (!isValid) {
     return res.status(400).json({ status: 400, error: errors });
   }
-  const result = await findUser(req.body);
-  if (!result.error) {
-    return res.status(200).json({ status: 200, data: result.user });
+  const { password, email } = req.body;
+  try {
+    const { result, error } = await getUser({ email });
+    if (result) {
+      const isMatch = await bcrypt.compare(password, result.password);
+      if (isMatch) {
+        const { user } = await signJWT(result);
+        return res.status(200).json({ status: 200, data: user });
+      }
+      return res.status(401).json({ status: 401, error: 'Incorrect email or password' });
+    }
+    if (error) {
+      return res.status(500).json({ status: 500, error: 'Server Error' });
+    }
+    return res.status(401).json({ status: 401, error: 'Incorrect email or password' });
+  } catch (error) {
+    return res.status(500).json({ status: 500, error: 'Server Error' });
   }
-  return res.status(401).json({ status: 401, error: result.error });
 });
 
 export default router;

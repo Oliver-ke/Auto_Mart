@@ -1,3 +1,7 @@
+/* the file naming convention adopted here was to dictects the execution order, as some action needs to be
+carried out before others, eg signup -> login
+*/
+
 /* global describe it */
 
 import chai from 'chai';
@@ -18,9 +22,9 @@ describe('api/v1/auth/signup', () => {
     });
     it('should add a user', (done) => {
       const user = {
-        email: 'uncleboob@gmail.com',
+        email: 'unclebob@gmail.com',
         password: 'password',
-        first_name: 'Boob',
+        first_name: 'Bob',
         last_name: 'John',
         address: 'block 9 flat two elekahia estate ph',
       };
