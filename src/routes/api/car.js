@@ -3,10 +3,8 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
-import {
- updateCar, getCar, deleteCar, getAllCars 
-} from '../../data/Car';
-import { addCar } from '../../db/queries/car';
+import { deleteCar, getAllCars } from '../../data/Car';
+import { addCar, updateCar, getCar } from '../../db/queries/car';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
   stateMiddleware,
@@ -46,7 +44,6 @@ router.post('/', authMiddleware, async (req, res) => {
       result.price = +result.price;
       return res.status(201).json({ status: 201, data: result });
     }
-    console.log(error, req.userData.id);
     return res.status(400).json({ status: 400, error: 'Invalid parameters' });
   } catch (err) {
     return res.status(500).json({ status: 500, error: 'Server Error' });
@@ -56,21 +53,30 @@ router.post('/', authMiddleware, async (req, res) => {
 // @route PATCH /car/<:car_id>/status
 // @desc Mark posted car as sold
 // @access Private, only authenticated users can mark ads as sold
-router.patch('/:car_id/status', authMiddleware, (req, res) => {
+router.patch('/:car_id/status', authMiddleware, async (req, res) => {
   let { car_id } = req.params;
   const { status } = req.body;
   // parse id to number type
   car_id = +car_id;
-  const userId = req.userData.id;
+  const userId = +req.userData.id;
   if (status === 'sold' || status === 'available') {
-    if (!car_id) {
+    if (typeof car_id !== 'number') {
       return res.status(400).json({ status: 400, error: 'Car_id must be a number' });
     }
-    const result = updateCar(car_id, userId, 'status', status);
-    if (!result.error) {
-      return res.status(200).json({ status: 200, data: result.update });
+    // Ensure car exist and belongs to the user
+    const { result: car } = await getCar({ id: car_id });
+    if (!car) {
+      return res.status(404).json({ status: 404, error: 'Not found' });
     }
-    return res.status(400).json({ status: 400, error: result.error });
+    if (car.owner !== userId) {
+      return res.status(403).json({ status: 403, error: 'Access denied' });
+    }
+    const { error, result } = await updateCar(car_id, { status });
+    if (!error) {
+      result.price = +result.price;
+      return res.status(200).json({ status: 200, data: result });
+    }
+    return res.status(500).json({ status: 500, error: 'Server error' });
   }
   return res.status(400).json({ status: 400, error: 'status can either be sold or available' });
 });
