@@ -1,12 +1,10 @@
-import { getCar, getUnsoldCars } from '../../db/queries/car';
+import { getCar, getUnsoldCars, getCarBetweenMaxMinPrice } from '../../db/queries/car';
 
-export const minMaxMiddleWare = (req, res, next) => {
-  let { status } = req.query;
-  status = status.toLowerCase();
+export const minMaxMiddleWare = async (req, res, next) => {
   const minPrice = req.query.min_price ? +req.query.min_price : null;
   const maxPrice = req.query.max_price ? +req.query.max_price : null;
   if (minPrice && maxPrice) {
-    const result = getCar(null, { status, minPrice, maxPrice });
+    const { result } = await getCarBetweenMaxMinPrice({ min: minPrice, max: maxPrice });
     return res.status(200).json({ status: 200, data: result });
   }
   return next();
