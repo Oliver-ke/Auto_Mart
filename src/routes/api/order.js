@@ -2,15 +2,16 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carOrderValidator from '../../validators/carOrderValidator';
-import { addOrder, updateOrder } from '../../data/Order';
-import { getCar } from '../../data/Car';
+import { updateOrder } from '../../data/Order';
+import { getCar } from '../../db/queries/car';
+import { addOrder } from '../../db/queries/order';
 
 const router = express.Router();
 
 // @route POST /api/v1/order
 // @desc Create an order request
 // @access Private, only authenticated users can make orders
-router.post('/', authMiddleware, (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   const { errors, isValid } = carOrderValidator(req.body);
 
   if (!isValid) {
@@ -18,7 +19,7 @@ router.post('/', authMiddleware, (req, res) => {
   }
   // the + parses value to number type
   const newOrder = {
-    price_offered: +req.body.amount,
+    amount: +req.body.amount,
     car_id: +req.body.car_id,
     buyer: req.userData.id,
     status: req.body.status || 'pending',
@@ -26,16 +27,27 @@ router.post('/', authMiddleware, (req, res) => {
   };
 
   // Check for car with the given car_id before adding order
-  const car = getCar(newOrder.car_id, null);
+  const { result: car } = await getCar({ id: newOrder.car_id });
   if (car) {
     if (car.status !== 'sold') {
       // prevent users from placing order for their own car ads post
       if (car.owner === req.userData.id) {
         return res.status(400).json({ status: 400, error: 'Cannot place order for your own advert' });
       }
-      newOrder.price = car.price;
-      const result = addOrder(newOrder);
-      return res.status(201).json({ status: 201, data: result });
+      newOrder.car_price = car.price;
+      const { error, result } = await addOrder(newOrder);
+      if (!error) {
+        // format response to numeric types
+        const resData = {
+          ...result,
+          price: +result.car_price,
+          buyer: +result.buyer,
+          car_id: +result.car_id,
+          price_offered: +result.amount,
+        };
+        return res.status(201).json({ status: 201, data: resData });
+      }
+      return res.status(500).json({ status: 500, error: 'Server error' });
     }
     return res.status(404).json({ status: 404, error: 'Car has already been sold' });
   }
