@@ -62,16 +62,16 @@ describe('api/v1/car?status=available || min_price&max_prce', () => {
         done();
       });
     });
-    // it('Should get cars of specific body_type', (done) => {
-    //   chai.request(app).get('/api/v1/car?status=available&body_type=jeep').end((carErr, carRes) => {
-    //     carRes.should.have.status(200);
-    //     carRes.body.should.be.a('object');
-    //     carRes.body.data[0].body_type.should.equal('jeep');
-    //     carRes.body.data[0].status.should.equal('available');
-    //     carRes.body.should.have.property('data');
-    //     carRes.body.data.should.be.a('array');
-    //     done();
-    //   });
-    // });
+    it('Should get cars of specific body_type', (done) => {
+      chai.request(app).get('/api/v1/car?body_type=jeep').end((carErr, carRes) => {
+        carRes.should.have.status(200);
+        carRes.body.should.be.a('object');
+        carRes.body.data[0].body_type.should.equal('jeep');
+        carRes.body.data[0].status.should.equal('available');
+        carRes.body.should.have.property('data');
+        carRes.body.data.should.be.a('array');
+        done();
+      });
+    });
   });
 });

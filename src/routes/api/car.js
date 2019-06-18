@@ -10,8 +10,7 @@ import {
 	stateMiddleware,
 	statusMiddleware,
 	minMaxMiddleWare,
-	manufactureMiddleware,
-	bodyTypeMiddleware
+	manufactureMiddleware
 } from '../middlewares/queryMiddleware';
 
 const router = express.Router();
@@ -127,14 +126,8 @@ router.get('/:car_id', async (req, res) => {
 // @route GET /car?status=avialable | /car?status=avialable&min_price&max_price
 // @desc view cars using query
 // @access Public, anyone can view cars
-router.get(
-	'/',
-	statusMiddleware,
-	minMaxMiddleWare,
-	stateMiddleware,
-	manufactureMiddleware,
-	bodyTypeMiddleware,
-	(req, res) => res.status(400).json({ status: 400, error: 'Invalid query parameters' })
+router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, (req, res) =>
+	res.status(400).json({ status: 400, error: 'Invalid query parameters' })
 );
 
 // @route DELETE /car/{car_id}
