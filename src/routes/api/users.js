@@ -8,7 +8,7 @@ import validateSignInRequest from '../../validators/signInValidator';
 import signJWT from '../../helper/signJWT';
 
 // db query functions
-import { addUser, getUser } from '../../db/queries/user';
+import { addUser, getUser } from '../../db/queryHelpers/user';
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.post('/signup', async (req, res) => {
   const newUser = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     password: req.body.password,
     address: req.body.address,
     is_admin: typeof req.body.is_admin === 'boolean' ? req.body.is_admin : false,
@@ -57,7 +57,8 @@ router.post('/signin', async (req, res) => {
   if (!isValid) {
     return res.status(400).json({ status: 400, error: errors });
   }
-  const { password, email } = req.body;
+  let { password, email } = req.body;
+  email = email.toLowerCase();
   try {
     const { result, error } = await getUser({ email });
     if (result) {

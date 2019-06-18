@@ -27,11 +27,3 @@ export default {
     await pool.query('DROP TABLE IF EXISTS orders,cars,users CASCADE');
   },
 };
-
-// eyes up unresolve promises might arise
-/*
-query2: async (text, params) => {
-    const res = await pool.query(text, params);
-    return res;
-  },
-*/
