@@ -96,6 +96,21 @@ export const getAllCars = async () => {
   }
 };
 
+// Get all cars whether sold or unsold with query
+export const getAllCarsWithQuery = async (condition) => {
+  const value = Object.values(condition);
+  const key = Object.keys(condition).toString();
+  const query = {
+    text: ` SELECT * FROM cars WHERE ${key}='${value[0]}'`,
+  };
+  try {
+    const { rows } = await pool.query(query);
+    return { error: null, result: rows };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
 // Get all car belonging to a user
 export const getUserCars = async (userId) => {
   const query = {
