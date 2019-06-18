@@ -22,12 +22,10 @@ export const stateMiddleware = async (req, res, next) => {
   return next();
 };
 
-export const manufactureMiddleware = (req, res, next) => {
-  let { status } = req.query;
-  status = status.toLowerCase();
-  const manufacturer = req.query.manufacturer ? req.query.manufacturer : null;
+export const manufactureMiddleware = async (req, res, next) => {
+  const manufacturer = req.query.manufacturer ? req.query.manufacturer.toLowerCase() : null;
   if (manufacturer) {
-    const result = getCar(null, { status, manufacturer });
+    const { result } = await getCarWithQuery({ manufacturer });
     return res.status(200).json({ status: 200, data: result });
   }
   return next();
