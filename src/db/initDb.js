@@ -18,7 +18,7 @@ const carTable = `CREATE TABLE IF NOT EXISTS
 const orderTable = `CREATE TABLE IF NOT EXISTS
       orders(
         id SERIAL PRIMARY KEY,
-        car_id BIGINT NOT NULL REFERENCES cars(id),
+        car_id BIGINT NOT NULL REFERENCES cars(id) ON DELETE CASCADE,
         car_price NUMERIC NOT NULL,
         amount NUMERIC NOT NULL,
         status VARCHAR(20) NOT NULL,
@@ -39,17 +39,17 @@ const userTable = `CREATE TABLE IF NOT EXISTS
       )`;
 
 export default async () => {
-  try {
-    // check db for response
-    await pool.query('SELECT NOW()');
-    // create tables
-    await pool.query(userTable);
-    await pool.query(carTable);
-    await pool.query(orderTable);
-    console.log('Database connected with tables');
-    return true;
-  } catch (error) {
-    console.error(error.message);
-    return false;
-  }
+	try {
+		// check db for response
+		await pool.query('SELECT NOW()');
+		// create tables
+		await pool.query(userTable);
+		await pool.query(carTable);
+		await pool.query(orderTable);
+		console.log('Database connected with tables');
+		return true;
+	} catch (error) {
+		console.error(error.message);
+		return false;
+	}
 };
