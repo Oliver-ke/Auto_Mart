@@ -26,6 +26,15 @@ const orderTable = `CREATE TABLE IF NOT EXISTS
         buyer BIGINT NOT NULL REFERENCES users(id)
       )`;
 
+const flagTable = `CREATE TABLE IF NOT EXISTS
+      flags(
+        id SERIAL PRIMARY KEY,
+        car_id INT NOT NULL REFERENCES cars(id),
+        created_on DATE NOT NULL,
+        reason VARCHAR(200) NOT NULL,
+        description VARCHAR(250) NOT NULL
+      )`;
+
 const userTable = `CREATE TABLE IF NOT EXISTS
       users(
         id BIGSERIAL PRIMARY KEY,
@@ -39,17 +48,18 @@ const userTable = `CREATE TABLE IF NOT EXISTS
       )`;
 
 export default async () => {
-	try {
-		// check db for response
-		await pool.query('SELECT NOW()');
-		// create tables
-		await pool.query(userTable);
-		await pool.query(carTable);
-		await pool.query(orderTable);
-		console.log('Database connected with tables');
-		return true;
-	} catch (error) {
-		console.error(error.message);
-		return false;
-	}
+  try {
+    // check db for response
+    await pool.query('SELECT NOW()');
+    // create tables
+    await pool.query(userTable);
+    await pool.query(carTable);
+    await pool.query(orderTable);
+    await pool.query(flagTable);
+    console.log('Database connected with tables');
+    return true;
+  } catch (error) {
+    console.error(error.message);
+    return false;
+  }
 };
