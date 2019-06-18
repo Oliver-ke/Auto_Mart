@@ -1,4 +1,6 @@
-import { getCar, getUnsoldCars, getCarBetweenMaxMinPrice } from '../../db/queries/car';
+import {
+ getCar, getUnsoldCars, getCarWithQuery, getCarBetweenMaxMinPrice 
+} from '../../db/queries/car';
 
 export const minMaxMiddleWare = async (req, res, next) => {
   const minPrice = req.query.min_price ? +req.query.min_price : null;
@@ -10,13 +12,11 @@ export const minMaxMiddleWare = async (req, res, next) => {
   return next();
 };
 
-export const stateMiddleware = (req, res, next) => {
-  let { status } = req.query;
-  status = status.toLowerCase();
+export const stateMiddleware = async (req, res, next) => {
   let { state } = req.query;
   state = state ? state.toLowerCase() : null;
   if (state === 'new' || state === 'used') {
-    const result = getCar(null, { status, state });
+    const { result } = await getCarWithQuery({ state });
     return res.status(200).json({ status: 200, data: result });
   }
   return next();
