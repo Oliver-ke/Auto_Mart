@@ -1,7 +1,7 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import flagInputValitator from '../../validators/flagValidator';
-import { addFlag } from '../../db/queries/flag';
+import { addFlag } from '../../db/queryHelpers/flag';
 
 const router = express.Router();
 

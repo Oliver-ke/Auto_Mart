@@ -2,8 +2,8 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carOrderValidator from '../../validators/carOrderValidator';
-import { getCar } from '../../db/queries/car';
-import { addOrder, updateOrder, getOrder } from '../../db/queries/order';
+import { getCar } from '../../db/queryHelpers/car';
+import { addOrder, updateOrder, getOrder } from '../../db/queryHelpers/order';
 
 const router = express.Router();
 
