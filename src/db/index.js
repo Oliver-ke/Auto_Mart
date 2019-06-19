@@ -24,6 +24,6 @@ export default {
     }
   },
   clearDb: async () => {
-    await pool.query('DROP TABLE IF EXISTS orders,cars,users CASCADE');
+    await pool.query('DROP TABLE IF EXISTS orders,flags,cars,users CASCADE');
   },
 };
