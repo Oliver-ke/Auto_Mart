@@ -19,12 +19,9 @@ export const addFlag = async (orderData) => {
   }
 };
 
-export const getFlag = async (condition) => {
-  const value = Object.values(condition);
-  const key = Object.keys(condition).toString();
+export const getFlags = async () => {
   const query = {
-    text: ` SELECT * FROM flags WHERE  ${key}=$1`,
-    values: value,
+    text: ' SELECT * FROM flags',
   };
   try {
     const { rows } = await pool.query(query);
@@ -47,3 +44,18 @@ export const deleteFlag = async (id) => {
     return { error: error.message };
   }
 };
+
+// export const getFlag = async (condition) => {
+//   const value = Object.values(condition);
+//   const key = Object.keys(condition).toString();
+//   const query = {
+//     text: ` SELECT * FROM flags WHERE  ${key}=$1`,
+//     values: value,
+//   };
+//   try {
+//     const { rows } = await pool.query(query);
+//     return { error: null, result: rows };
+//   } catch (error) {
+//     return { error: error.message };
+//   }
+// };

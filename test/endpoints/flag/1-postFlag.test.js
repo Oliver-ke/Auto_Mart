@@ -15,7 +15,7 @@ describe('post', () => {
       chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
         const newFlag = {
           reason: 'price',
-          car_id: '3',
+          car_id: '1',
           description: 'Fraudulent car price, paid but did not send my order',
         };
         chai
@@ -33,7 +33,7 @@ describe('post', () => {
     it('Should only allow authenticated users having authorized headers', (done) => {
       const newFlag = {
         reason: 'price',
-        car_id: '3',
+        car_id: '1',
         description: 'Fraudulent car price, paid but did not send my order',
       };
       chai.request(app).post('/api/v1/flag/').send(newFlag).end((flagErr, flagRes) => {
