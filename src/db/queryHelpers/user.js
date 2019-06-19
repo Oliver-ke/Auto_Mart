@@ -34,6 +34,22 @@ export const getUser = async (condition) => {
   }
 };
 
+// update user
+export const updateUser = async (id, update) => {
+  const key = Object.keys(update).toString();
+  const value = Object.values(update).toString();
+  const query = {
+    text: `UPDATE users SET ${key}=$2 WHERE id=$1 RETURNING *`,
+    values: [id, value],
+  };
+  try {
+    const { rows } = await pool.query(query);
+    return { error: null, result: rows[0] };
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
 // Detete User;
 export const deleteUser = async (id) => {
   const query = {

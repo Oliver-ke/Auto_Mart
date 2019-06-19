@@ -7,6 +7,7 @@ import initializeDb from './db/initDb';
 
 // Routers
 import users from './routes/api/users';
+import auth from './routes/api/auth';
 import car from './routes/api/car';
 import carOrder from './routes/api/order';
 import flag from './routes/api/flag';
@@ -33,7 +34,8 @@ cloudinary.config({
 });
 
 // Api routes
-app.use('/api/v1/auth', users);
+app.use('/api/v1/users', users);
+app.use('/api/v1/auth', auth);
 app.use('/api/v1/car', car);
 app.use('/api/v1/order', carOrder);
 app.use('/api/v1/flag', flag);

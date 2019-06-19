@@ -1,81 +1,65 @@
-/* eslint-disable consistent-return */
 import express from 'express';
 import bcrypt from 'bcryptjs';
-// Input validation
-import validateSignUpRequest from '../../validators/signUpValidator';
-import validateSignInRequest from '../../validators/signInValidator';
-
-import signJWT from '../../helper/signJWT';
-
-// db query functions
-import { addUser, getUser } from '../../db/queryHelpers/user';
+import { isString } from 'util';
+import { updateUser, getUser } from '../../db/queryHelpers/user';
+import sendMail from '../../helper/sendMail';
 
 const router = express.Router();
 
-// @route POST /auth/signup
-// @desc Create user account
-// @access Public
-router.post('/signup', async (req, res) => {
-  const { errors, isValid } = validateSignUpRequest(req.body);
-
-  if (!isValid) {
-    return res.status(400).json({ status: 400, error: errors });
-  }
-  const newUser = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    email: req.body.email.toLowerCase(),
-    password: req.body.password,
-    address: req.body.address,
-    is_admin: typeof req.body.is_admin === 'boolean' ? req.body.is_admin : false,
-  };
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(newUser.password, salt);
-    newUser.password = hash;
-    // try adding user, errors if email already exist
-    const { error, result } = await addUser(newUser);
-    if (!error) {
-      const { user } = await signJWT(result);
-      return res.status(201).json({ status: 201, data: user });
+// @route GET /users/<:user-email>/reset_password
+// @desc reset password
+// @private, only existing users can reset or retrive password
+router.post('/:user_email/reset_password', async (req, res) => {
+  const { user_email: email } = req.params;
+  const { password, new_password: newPassword } = req.body;
+  if (newPassword && password) {
+    // check new password
+    if (!isString(newPassword)) {
+      return res.status(400).json({ status: 400, error: 'Password should be a string type' });
     }
-    if (error === 'duplicate key value violates unique constraint "users_email_key"') {
-      return res.status(400).json({ status: 400, error: 'Email already exist' });
+    if (newPassword.length < 6) {
+      return res.status(400).json({ status: 400, error: 'New password should be atleast 6 characters' });
     }
-    return res.status(500).json({ status: 500, error: 'Server Error' });
-  } catch (error) {
-    console.error(error.message);
-    return res.status(500).json({ status: 500, error: 'Server Error' });
-  }
-});
-
-// @route POST /auth/signin
-// @desc login to user account
-// @access Private -> Only registered users can signin
-router.post('/signin', async (req, res) => {
-  const { errors, isValid } = validateSignInRequest(req.body);
-  if (!isValid) {
-    return res.status(400).json({ status: 400, error: errors });
-  }
-  let { password, email } = req.body;
-  email = email.toLowerCase();
-  try {
-    const { result, error } = await getUser({ email });
-    if (result) {
-      const isMatch = await bcrypt.compare(password, result.password);
+    const { result: user } = await getUser({ email });
+    if (user) {
+      // compare the old password with that in the database
+      const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        const { user } = await signJWT(result);
-        return res.status(200).json({ status: 200, data: user });
+        // if password matches then gen salt, hash new password and update
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(newPassword, salt);
+        const { result } = await updateUser(user.id, { password: hashPassword });
+        if (result) {
+          return res.status(204).json({ status: 204 });
+        }
+        return res.status(500).json({ status: 500, error: 'Server error' });
       }
-      return res.status(401).json({ status: 401, error: 'Incorrect email or password' });
+      return res.status(401).json({ status: 401, error: 'Incorrect password or email' });
     }
-    if (error) {
-      return res.status(500).json({ status: 500, error: 'Server Error' });
-    }
-    return res.status(401).json({ status: 401, error: 'Incorrect email or password' });
-  } catch (error) {
-    return res.status(500).json({ status: 500, error: 'Server Error' });
+    // for security reasons, using the same error massage for both not found email and incorrect password
+    return res.status(401).json({ status: 401, error: 'Incorrect password or email' });
   }
+  // reaching here means user dont know password
+  // check to see if email exist
+  const { result: user } = await getUser({ email });
+  if (user) {
+    // generate password for the user, hash, save and send password email
+    const newUserPassword = Math.random().toString(36).substring(2, 15);
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(newUserPassword, salt);
+    const { result } = await updateUser(user.id, { password: hashPassword });
+    if (result) {
+      // send mail;
+      const mail = { email, newUserPassword };
+      const { error } = await sendMail(mail);
+      if (!error) {
+        return res.status(204).json({ status: 204 });
+      }
+      return res.status(500).json({ status: 500, error: 'Server error, mail not sent' });
+    }
+    return res.status(500).json({ status: 500, error: 'Server error' });
+  }
+  return res.status(404).json({ status: 404, error: 'Not found' });
 });
 
 export default router;

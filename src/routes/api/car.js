@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
- addCar, updateCar, getCar, deleteCar, getAllCars
+ addCar, updateCar, getCar, deleteCar, getAllCars 
 } from '../../db/queryHelpers/car';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
