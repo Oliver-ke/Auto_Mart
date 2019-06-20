@@ -7,7 +7,7 @@ import app from '../../../src/server';
 chai.use(chaiHttp);
 chai.should();
 
-describe('api/v1/auth/signup', () => {
+describe('api/v1/users/{user_email}/reset_password', () => {
   describe('POST', () => {
     it('should reset password if new_password and password is provided', (done) => {
       const user = {
