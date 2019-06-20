@@ -132,13 +132,24 @@ router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufacture
 
 // @route DELETE /car/{car_id}
 // @desc Admin delete car ads endpoint
-// @access Privat, only admin can delete car ads
+// @access Privat, only admin or car owner can delete car ads
 router.delete('/:car_id', authMiddleware, async (req, res) => {
   const car_id = req.params.car_id ? +req.params.car_id : null;
-  const isAdmin = req.userData.isAdmin ? req.userData.isAdmin : null;
+  const { isAdmin, id } = req.userData ? req.userData : null;
   if (car_id) {
-    // confirm user is admin
+    // check if user is admin or normal user
     if (!isAdmin) {
+      // check if car exist and belongs to the user
+      const { result: car } = await getCar({ id: car_id });
+      if (car && car.owner === +id) {
+        // issue delete
+        const { result } = await deleteCar(car_id);
+        if (result) {
+          return res.status(200).json({ status: 200, data: 'Car Ad successfully deleted' });
+        }
+        return res.status(500).json({ status: 500, error: 'Server error' });
+      }
+      // no car exist or user is not owner
       return res.status(403).json({ status: 403, error: 'Access denied' });
     }
     // check if car exist
