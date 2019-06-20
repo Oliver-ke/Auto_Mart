@@ -1,7 +1,7 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import flagInputValitator from '../../validators/flagValidator';
-import { addFlag, getFlags } from '../../db/queryHelpers/flag';
+import { addFlag, getFlags, deleteFlag } from '../../db/queryHelpers/flag';
 
 const router = express.Router();
 
@@ -36,6 +36,25 @@ router.get('/', authMiddleware, async (req, res) => {
     const { result: flags, error } = await getFlags();
     if (!error) {
       return res.status(200).json({ status: 200, data: flags });
+    }
+    return res.status(500).json({ status: 500, error: 'Server Error' });
+  }
+  return res.status(403).json({ status: 403, error: 'Access denied' });
+});
+
+// @route DELETE /flag
+// @desc Admin delete flag post
+// @access Private, only admin can delete flag
+router.delete('/:flag_id', authMiddleware, async (req, res) => {
+  const { isAdmin } = req.userData;
+  const { flag_id: flagId } = req.params;
+  if (isAdmin) {
+    const { result, error } = await deleteFlag(flagId);
+    if (!error) {
+      if (result) {
+        return res.status(200).json({ status: 200, data: 'Flag successfully deleted' });
+      }
+      return res.status(404).json({ status: 404, error: `Car with id ${flagId} does not exist` });
     }
     return res.status(500).json({ status: 500, error: 'Server Error' });
   }
