@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
- addCar, updateCar, getCar, deleteCar, getAllCars 
+ addCar, updateCar, getCar, deleteCar, getAllCars, getUserCars 
 } from '../../db/queryHelpers/car';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
@@ -123,6 +123,22 @@ router.get('/:car_id', async (req, res) => {
     return res.status(200).json({ status: 200, data: result });
   }
   return res.status(400).json({ status: 400, error: 'car_id should be a number type' });
+});
+
+// @route GET /car/users/posts
+// @desc Get all car post belonging to a user
+// @access Private, only users can have car posts
+router.get('/users/posts', authMiddleware, async (req, res) => {
+  // the user is identified by the Auth middleware which adds userData to req object
+  const { id: userId } = req.userData;
+  if (userId) {
+    const { result } = await getUserCars(userId);
+    if (result) {
+      return res.status(200).json({ status: 200, data: result });
+    }
+    return res.status(500).json({ status: 500, error: 'Server error' });
+  }
+  return res.status(401).json({ status: 401, error: 'UnAuthorized user' });
 });
 
 // @route GET /car?status=avialable | /car?status=avialable&min_price&max_price
