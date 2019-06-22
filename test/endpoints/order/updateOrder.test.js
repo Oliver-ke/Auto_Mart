@@ -14,7 +14,7 @@ describe('api/v1/order/<:order_id>/price', () => {
       };
       chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
         const newOrder = {
-          car_id: '1',
+          car_id: '5',
           amount: '223456',
         };
         chai
@@ -44,7 +44,7 @@ describe('api/v1/order/<:order_id>/price', () => {
       };
       chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
         const newOrder = {
-          car_id: '1',
+          car_id: '6',
           amount: '223456',
           status: 'accepted',
         };
