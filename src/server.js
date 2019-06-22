@@ -17,7 +17,7 @@ dotenv.config();
 // Initialize db, create tables if not present
 // do this if current environment is not test
 if (process.env.NODE_ENV !== 'test') {
-  initializeDb();
+	initializeDb();
 }
 // Add file upload middleware to receive multipart (file) data on reqest object
 app.use(fileUpload());
@@ -28,9 +28,9 @@ app.use(express.json());
 
 // configure cloudinary for image uploads
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.API_KEY,
+	api_secret: process.env.API_SECRET
 });
 
 // Api routes
@@ -46,7 +46,7 @@ app.get('/', (req, res) => res.sendfile(path.resolve(__dirname, 'public', 'index
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log('app running on port', PORT);
+	console.log('app running on port', PORT);
 });
 
 export default app;

@@ -77,7 +77,7 @@ export const getUnsoldCars = async () => {
   };
   try {
     const { rows } = await pool.query(query);
-    return { error: null, result: rows };
+    return { error: null, result: rows.map(row => ({ ...row, price: +row.price })) };
   } catch (error) {
     return { error: error.message };
   }
@@ -90,7 +90,7 @@ export const getAllCars = async () => {
   };
   try {
     const { rows } = await pool.query(query);
-    return { error: null, result: rows };
+    return { error: null, result: rows.map(row => ({ ...row, price: +row.price })) };
   } catch (error) {
     return { error: error.message };
   }
@@ -105,7 +105,7 @@ export const getAllCarsWithQuery = async (condition) => {
   };
   try {
     const { rows } = await pool.query(query);
-    return { error: null, result: rows };
+    return { error: null, result: rows.map(row => ({ ...row, price: +row.price })) };
   } catch (error) {
     return { error: error.message };
   }
@@ -119,7 +119,7 @@ export const getUserCars = async (userId) => {
   };
   try {
     const { rows } = await pool.query(query);
-    return { error: null, result: rows };
+    return { error: null, result: rows.map(row => ({ ...row, price: +row.price })) };
   } catch (error) {
     return { error: error.message };
   }
@@ -133,7 +133,7 @@ export const getCarBetweenMaxMinPrice = async (condition) => {
   };
   try {
     const { rows } = await pool.query(query);
-    return { error: null, result: rows };
+    return { error: null, result: rows.map(row => ({ ...row, price: +row.price })) };
   } catch (error) {
     return { error: error.message };
   }
@@ -148,7 +148,7 @@ export const getCarWithQuery = async (condition) => {
   };
   try {
     const { rows } = await pool.query(query);
-    return { error: null, result: rows };
+    return { error: null, result: rows.map(row => ({ ...row, price: +row.price })) };
   } catch (error) {
     return { error: error.message };
   }
