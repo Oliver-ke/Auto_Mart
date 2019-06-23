@@ -1,5 +1,8 @@
 import {
- getUnsoldCars, getCarWithQuery, getCarBetweenMaxMinPrice, getAllCarsWithQuery
+  getUnsoldCars,
+  getCarWithQuery,
+  getCarBetweenMaxMinPrice,
+  getAllCarsWithQuery,
 } from '../../db/queryHelpers/car';
 
 export const minMaxMiddleWare = async (req, res, next) => {
@@ -36,7 +39,6 @@ const bodyTypeMiddleware = async (req, res) => {
   if (bodyType) {
     const { error, result } = await getAllCarsWithQuery({ body_type: bodyType });
     if (error) {
-      console.log(error);
       return res.status(500).json({ status: 500, error: 'Server error' });
     }
     return res.status(200).json({ status: 200, data: result });

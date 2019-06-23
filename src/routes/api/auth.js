@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import validateSignUpRequest from '../../validators/signUpValidator';
 import validateSignInRequest from '../../validators/signInValidator';
 
+// helper function to sign JWT
 import signJWT from '../../helper/signJWT';
 
 // db query functions
@@ -44,7 +45,6 @@ router.post('/signup', async (req, res) => {
     }
     return res.status(500).json({ status: 500, error: 'Server Error' });
   } catch (error) {
-    console.error(error.message);
     return res.status(500).json({ status: 500, error: 'Server Error' });
   }
 });
@@ -60,6 +60,7 @@ router.post('/signin', async (req, res) => {
   let { password, email } = req.body;
   email = email.toLowerCase();
   try {
+    // find the user with the given email
     const { result, error } = await getUser({ email });
     if (result) {
       const isMatch = await bcrypt.compare(password, result.password);

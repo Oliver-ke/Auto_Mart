@@ -70,12 +70,12 @@ router.patch('/:order_id/price', authMiddleware, async (req, res) => {
   price = +price;
   const userId = req.userData.id;
   if (typeof order_id === 'number' && typeof price === 'number') {
-    // check if order belongs to user
     const { result: foundOrder } = await getOrder({ id: order_id });
     const order = foundOrder[0];
     if (!order) {
       return res.status(404).json({ status: 404, error: 'Order not found' });
     }
+    // check if order belongs to user
     if (order.buyer !== userId) {
       return res.status(403).json({ status: 403, error: 'Access denied' });
     }
