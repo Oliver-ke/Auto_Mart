@@ -56,10 +56,14 @@ export default async () => {
     await pool.query(carTable);
     await pool.query(orderTable);
     await pool.query(flagTable);
-    console.log('Database connected with tables');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Database connected with tables');
+    }
     return true;
   } catch (error) {
-    console.error(error.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(error.message);
+    }
     return false;
   }
 };
