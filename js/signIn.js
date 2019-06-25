@@ -4,11 +4,8 @@ const spinner = document.querySelector('.spinner');
 const alert = document.querySelector('.alert');
 
 let userData = {
-	first_name: '',
-	last_name: '',
 	email: '',
-	password: '',
-	address: ''
+	password: ''
 };
 // handles form inputs
 const handleInputChange = (e) => {
@@ -33,12 +30,16 @@ const handleSubmit = async (e) => {
 			body: JSON.stringify(userData),
 			headers: { 'Content-Type': 'application/json' }
 		};
-		const res = await fetch('https://auto-mart-ng.herokuapp.com/api/v1/auth/signup', config);
+		const res = await fetch('https://auto-mart-ng.herokuapp.com/api/v1/auth/signin', config);
 		const { error, data } = await res.json();
 		if (data) {
 			spinner.classList.add('hide');
 			localStorage.setItem('user', JSON.stringify(data));
-			window.location.replace('/dashboard.html');
+			if (data.is_admin) {
+				window.location.replace('/admin-dashboard.html');
+			} else {
+				window.location.replace('/dashboard.html');
+			}
 		}
 		if (error) {
 			spinner.classList.add('hide');
@@ -57,8 +58,5 @@ const handleSubmit = async (e) => {
 form.onsubmit = (e) => handleSubmit(e);
 
 // Add change event to inputes
-document.querySelector('input[name=first_name]').addEventListener('change', (e) => handleInputChange(e));
-document.querySelector('input[name=last_name]').addEventListener('change', (e) => handleInputChange(e));
 document.querySelector('input[name=email]').addEventListener('change', (e) => handleInputChange(e));
 document.querySelector('input[name=password]').addEventListener('change', (e) => handleInputChange(e));
-document.querySelector('textarea[name=address]').addEventListener('change', (e) => handleInputChange(e));
