@@ -1,0 +1,47 @@
+.table th,
+td {
+	padding: 1rem;
+	text-align: left;
+}
+
+.table th {
+	background: #ccc;
+}
+
+.table {
+	width: 100%;
+}
+
+.table a {
+	color: #fff;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 700px) {
+	.container {
+		width: 100%;
+		padding-left: 0.3rem;
+		padding-right: 0.3rem;
+	}
+	button.btn {
+		font-size: 0.7rem;
+		padding: 0.4rem;
+		margin: 0;
+	}
+	.table th,
+	td {
+		padding: 0.5rem;
+		text-align: left;
+	}
+	.dash-buttons a {
+		display: block;
+		width: auto;
+		margin-bottom: 0.2rem;
+	}
+}
+
+@media screen and (max-width: 1000px) and (min-width: 701px) {
+	.cars {
+		grid-template-columns: 1fr 1fr;
+	}
+}
