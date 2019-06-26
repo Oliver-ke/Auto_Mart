@@ -1,43 +1,58 @@
+"use strict";
+
 /* global document fetch localStorage window  */
 const form = document.querySelector('.form');
 const spinner = document.querySelector('.spinner');
 const alert = document.querySelector('.alert');
-
 let userData = {
   email: '',
-  password: '',
-};
-// handles form inputs
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  userData = { ...userData, [name]: value };
-};
+  password: ''
+}; // handles form inputs
 
-// shows alert
-const showAlert = (msg) => {
+const handleInputChange = e => {
+  const {
+    name,
+    value
+  } = e.target;
+  userData = { ...userData,
+    [name]: value
+  };
+}; // shows alert
+
+
+const showAlert = msg => {
   alert.classList.remove('hide');
   alert.innerHTML = ` <i class="fas fa-info-circle"></i> ${msg}`;
   setTimeout(() => alert.classList.add('hide'), 5000);
-};
+}; // Handle form submit
 
-// Handle form submit
-const handleSubmit = async (e) => {
+
+const handleSubmit = async e => {
   e.preventDefault();
   spinner.classList.remove('hide');
+
   try {
     const config = {
       method: 'POST',
       body: JSON.stringify(userData),
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json'
+      }
     };
     const res = await fetch('https://auto-mart-ng.herokuapp.com/api/v1/auth/signin', config);
-    const { error, data } = await res.json();
+    const {
+      error,
+      data
+    } = await res.json();
+
     if (data) {
       spinner.classList.add('hide');
       localStorage.setItem('user', JSON.stringify(data));
+
       if (data.is_admin) {
         const regex = new RegExp('github.io', 'gi');
         const reponame = window.location.href.split('/')[3];
+
         if (window.location.host.match(regex)) {
           window.location.replace(`/${reponame}/admin-dashboard.html`);
         } else {
@@ -46,6 +61,7 @@ const handleSubmit = async (e) => {
       } else {
         const regex = new RegExp('github.io', 'gi');
         const repoName = window.location.href.split('/')[3];
+
         if (window.location.host.match(regex)) {
           window.location.replace(`/${repoName}/dashboard.html`);
         } else {
@@ -53,9 +69,10 @@ const handleSubmit = async (e) => {
         }
       }
     }
+
     if (error) {
-      spinner.classList.add('hide');
-      // error might be an object or string
+      spinner.classList.add('hide'); // error might be an object or string
+
       if (typeof error === 'object') {
         showAlert(Object.values(error));
       } else {
@@ -66,10 +83,12 @@ const handleSubmit = async (e) => {
     spinner.classList.add('hide');
     showAlert('Network Error');
   }
-};
-// pass form submit event
-form.onsubmit = e => handleSubmit(e);
+}; // pass form submit event
 
-// Add change event to inputes
+
+form.onsubmit = e => handleSubmit(e); // Add change event to inputes
+
+
 document.querySelector('input[name=email]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('input[name=password]').addEventListener('change', e => handleInputChange(e));
+//# sourceMappingURL=signIn.js.map
