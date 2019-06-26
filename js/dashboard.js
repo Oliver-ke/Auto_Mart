@@ -77,8 +77,8 @@ const createPostTable = (table, data) => {
     row.innerHTML = `
             <td class="hide-sm">${item.created_on.split('T')[0]}</td>
             <td>${item.model}</td>
-            <td class="hide-sm">${item.price}</td>
-            <td>${item.status}</td>
+            <td>${item.price}</td>
+            <td class="hide-sm">${item.status}</td>
             <td> <button class="btn btn-danger">
               <a href="update-car-price.html?car_id=${item.id}">
                 View
