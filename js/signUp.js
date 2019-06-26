@@ -66,7 +66,8 @@ const handleSubmit = async (e) => {
       }
     }
   } catch (error) {
-    showAlert('Server Access Error');
+    spinner.classList.add('hide');
+    showAlert('Network Error');
   }
 };
 // pass form submit event
