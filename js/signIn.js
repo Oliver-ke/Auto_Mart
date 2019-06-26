@@ -91,4 +91,3 @@ form.onsubmit = e => handleSubmit(e); // Add change event to inputes
 
 document.querySelector('input[name=email]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('input[name=password]').addEventListener('change', e => handleInputChange(e));
-//# sourceMappingURL=signIn.js.map

@@ -10,4 +10,3 @@ inputFile.addEventListener('change', e => {
     fileLabel.innerHTML = `<strong>${fileName}</strong>`;
   }
 });
-//# sourceMappingURL=postCar.js.map

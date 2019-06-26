@@ -16,4 +16,3 @@ editBtn.addEventListener('click', e => {
     isOpen = true;
   }
 });
-//# sourceMappingURL=updatePostPrice.js.map

@@ -22,11 +22,11 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cars.html">Adverts</a></li>
-      <li><a class="current" href="dashboard.html">
+      <li class="hide"><a class="current" href="dashboard.html">
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li><a href="sign-in.html">
+      <li class="hide logout"><a id="logout-btn" href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
@@ -57,107 +57,39 @@
       <span class="text-primary">|</span>
       Posted Adverts
     </h2>
-    <table class="table" id="post">
+    <table class="table">
       <thead>
         <tr>
           <th class="hide-sm">Date</th>
-          <th>Name</th>
-          <th>Price(#)</th>
-          <th class="hide-sm">State</th>
-
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="hide-sm">5th May 2018</td>
-          <td>Toyota G-wagon</td>
-          <td>500000</td>
-          <td class="hide-sm">old</td>
-          <td>
-            <button class="btn btn-danger">
-              <a href="update-car-price.html">
-                View
-              </a>
-            </button>
-          </td>
-        </tr>
-
-        <tr>
-          <td class="hide-sm">13 July 2017</td>
-          <td>VolksWagon</td>
-          <td>452000</td>
-          <td class="hide-sm">New</td>
-          <td>
-            <button class="btn btn-danger">
-              <a href="update-post.html">
-                View
-              </a>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td class="hide-sm">4th December 2017</td>
-          <td>Honda SUV</td>
-          <td>452000</td>
-          <td class="hide-sm">New</td>
-          <td>
-            <button class="btn btn-danger">
-              <a href="update-post.html">
-                View
-              </a>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2 class="my-2">
-      <span class="text-primary">|</span> Your Placed Orders
-    </h2>
-    <table class="table" id="order">
-      <thead>
-        <tr>
-          <th class="hide-sm">Date</th>
-          <th>Name</th>
+          <th>Model</th>
           <th>Price(#)</th>
           <th class="hide-sm">State</th>
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="post"></tbody>
+    </table>
+
+    <h2 class="my-2">
+      <span class="text-primary">|</span> Your Placed Orders
+    </h2>
+    <table class="table">
+      <thead>
         <tr>
-          <td class="hide-sm">13 July 2017</td>
-          <td>Ferarri</td>
-          <td>452000000</td>
-          <td class="hide-sm">New</td>
-          <td>
-            <button class="btn btn-danger">
-              <a href="update-order.html">
-                Edit/Delete
-              </a>
-            </button>
-          </td>
+          <th>Date</th>
+          <th class="hide-sm">Car Price(#)</th>
+          <th class="hide-sm">Your Price(#)</th>
+          <th>State</th>
+          <th></th>
         </tr>
-        <tr>
-          <td class="hide-sm">4th December 2017</td>
-          <td>Honda Pilot</td>
-          <td>452000</td>
-          <td class="hide-sm">New</td>
-          <td>
-            <button class="btn btn-danger">
-              <a href="update-order.html">
-                Edit/Delete
-              </a>
-            </button>
-          </td>
-        </tr>
-      </tbody>
+      </thead>
+      <tbody id="order"></tbody>
     </table>
   </section>
   <div class="container">
     <div class="spinner"></div>
   </div>
-  <script async src="./js/dashboard.js"></script>
+  <script type="module" defer src="./js/dashboard.js"></script>
 </body>
 
 </html>

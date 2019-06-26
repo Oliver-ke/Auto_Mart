@@ -7,6 +7,9 @@ const postTable = document.querySelector('#post');
 const orderTable = document.querySelector('#order');
 const content = document.querySelector('.content');
 const dispName = document.querySelector('#user-name');
+const logoutLink = document.querySelector('li.hide');
+const logoutBtn = document.querySelector('a#logout-btn');
+const dashLink = document.querySelector('li.logout'); // request users items (orders and post)
 
 const getUserItems = async token => {
   const config = {
@@ -46,46 +49,97 @@ const getUserItems = async token => {
       error
     };
   }
-};
+}; // create Order table
 
-const createTable = (table, data) => {
+
+const createOrderTable = (table, data) => {
   data.map(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
             <td>${item.created_on.split('T')[0]}</td>
+            <td class="hide-sm">${item.car_price}</td>
+            <td class="hide-sm">${item.amount}</td>
+            <td>${item.status}</td>
+            <td> <button class="btn btn-danger">
+              <a href="update-order.html?order_id=${item.id}">
+                View
+              </a>
+            </button>
+						</td>
+        `;
+    table.appendChild(row);
+  });
+};
+
+const createPostTable = (table, data) => {
+  data.map(item => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+            <td class="hide-sm">${item.created_on.split('T')[0]}</td>
             <td>${item.model}</td>
-            <td>${item.price}</td>
+            <td class="hide-sm">${item.price}</td>
             <td>${item.status}</td>
             <td> <button class="btn btn-danger">
               <a href="update-car-price.html?car_id=${item.id}">
                 View
               </a>
             </button>
-            </td>
+						</td>
         `;
     table.appendChild(row);
   });
 };
 
 const loadData = async () => {
+  // no user token, the redirect to login
+  if (!user) {
+    const regex = new RegExp('github.io', 'gi');
+    const reponame = window.location.href.split('/')[3];
+
+    if (window.location.host.match(regex)) {
+      return window.location.replace(`/${reponame}/sign-in.html`);
+    }
+
+    return window.location.replace('/sign-in.html');
+  }
+
   const {
     error,
     posts,
     orders
-  } = await getUserItems(user.token);
+  } = await getUserItems(user.token); // redirect back to  login if error
 
   if (error) {
-    console.log(error);
+    const regex = new RegExp('github.io', 'gi');
+    const reponame = window.location.href.split('/')[3];
+
+    if (window.location.host.match(regex)) {
+      return window.location.replace(`/${reponame}/sign-in.html`);
+    }
+
     return window.location.replace('/sign-in.html');
   }
 
   spinner.classList.add('hide');
-  createTable(postTable, posts); // createTable(orderTable,orders);
-
+  createPostTable(postTable, posts);
+  createOrderTable(orderTable, orders);
   dispName.textContent = `${user.first_name} ${user.last_name}`;
   content.classList.remove('hide');
-  console.log(posts, orders);
-};
+  dashLink.classList.remove('hide');
+  logoutLink.classList.remove('hide');
+}; // clear localstorage and redirect to login
 
-loadData(); // createTable(postTable, data);
-//# sourceMappingURL=dashboard.js.map
+
+logoutBtn.addEventListener('click', e => {
+  e.preventDefault();
+  localStorage.removeItem('user');
+  const regex = new RegExp('github.io', 'gi');
+  const reponame = window.location.href.split('/')[3];
+
+  if (window.location.host.match(regex)) {
+    window.location.replace(`/${reponame}/sign-in.html`);
+  } else {
+    window.location.replace('/sign-in.html');
+  }
+});
+loadData();

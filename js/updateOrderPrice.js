@@ -7,4 +7,3 @@ editBtn.addEventListener('click', e => {
   input.removeAttribute('readonly');
   input.classList.add('focus');
 });
-//# sourceMappingURL=updateOrderPrice.js.map

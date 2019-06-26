@@ -97,4 +97,3 @@ document.querySelector('input[name=last_name]').addEventListener('change', e => 
 document.querySelector('input[name=email]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('input[name=password]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('textarea[name=address]').addEventListener('change', e => handleInputChange(e));
-//# sourceMappingURL=signUp.js.map
