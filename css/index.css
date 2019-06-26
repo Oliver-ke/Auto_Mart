@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.landing-inner h1.hero-text {
+	color: #f5c012;
+	font-family: 'Roboto', sans-serif;
+}
+
+.landing-inner p.lead {
+	color: #ccc;
+}
+
+.landing {
+	position: relative;
+	background: url('../img/landing2.jpg') no-repeat center center/cover;
+	height: 100vh;
+}
+
+.landing .landing-inner {
+	color: #fff;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	margin: auto;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.dark-overlay {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.7);
+}

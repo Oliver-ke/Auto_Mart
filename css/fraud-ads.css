@@ -1,0 +1,13 @@
+form.form textarea {
+	font-family: inherit;
+	font-size: 1.5rem;
+}
+
+p.lead {
+	font-weight: bold;
+}
+
+input.btn {
+	background: #333;
+	color: #fff;
+}

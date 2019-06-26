@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <!-- remember fontawesom -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <link href="css/post-car.css" rel="stylesheet" type="text/css">
+  <title>AutoMart : Post Advert</title>
+</head>
+
+<body>
+  <nav class="navbar bg-dark">
+    <h1><a href="dashboard.html">
+        <i class="fas fa-car"></i>Auto<span class="logo">Mart</span>
+      </a></h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="pages.html">Pages</a></li>
+      <li><a href="cars.html">Adverts</a></li>
+      <li><a href="dashboard.html">
+          <i class="fas fa-user">
+          </i>
+          <span class="hide-sm">Dashboard</span> </a></li>
+      <li><a href="sign-in.html">
+          <i class="fas fa-sign-out-alt">
+          </i>
+          <span class="hide-sm">Logout</span> </a>
+      </li>
+    </ul>
+  </nav>
+  <section class="container">
+    <div class="head-text">
+      <h1 class="large text-primary">
+        Post Car Sale's Advert
+      </h1>
+      <p>Cars posted here can be later edited to suite your needs</p>
+    </div>
+    <button class="btn btn-primary">
+      <a class="back-btn" href="dashboard.html">
+        <span class="text-primary"><i class="fas fa-angle-left"></i></span>
+        Back to Dashboard
+      </a>
+    </button>
+    <div class="post-wrapper">
+      <div class="form-container">
+        <form action="dashboard.html" class="form">
+          <div class="form-group ">
+            <input type="text" name="carName" required placeholder=" Name of Car">
+          </div>
+          <div class="form-group">
+            <input type="text" name="manufacturer" placeholder=" Manufacturer">
+          </div>
+          <div class="form-group">
+            <input type="number" name="price" placeholder=" Price in Naira">
+            <small>Enter car prices with Naira equivalent</small>
+          </div>
+          <div class="form-group py-1">
+            <select>
+              <option disabled selected>Choose Car state</option>
+              <option value="new">New</option>
+              <option value="used">Used</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="car-img" class="file-label">
+              Choose Car image
+            </label>
+            <span class="file-name"><strong>No file Chosen</strong></span>
+            <input id="car-img" name="car-img" type="file" />
+          </div>
+          <input type="submit" value="Post Ads" class="btn btn-primary">
+        </form>
+      </div>
+
+    </div>
+
+  </section>
+  <script src="js/postCar.js"></script>
+</body>
+
+</html>
