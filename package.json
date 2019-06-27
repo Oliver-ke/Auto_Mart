@@ -8,7 +8,6 @@
 		"test": "cross-env NODE_ENV=test && mocha --require @babel/register --recursive --exit || true",
 		"coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
 		"build": "babel src --out-dir ./build --copy-files",
-		"postbuild": "npm run deploy",
 		"deploy": "gh-pages -d ./build/UI",
 		"dev": "nodemon --exec babel-node ./src/server.js",
 		"debug": "node --inspect-brk ./dist/server.js"

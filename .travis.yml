@@ -6,6 +6,7 @@ catche:
   - node_modules
 script:
 - npm run coverage
+- npm run deploy
 deploy:
   provider: heroku
   api_key:
