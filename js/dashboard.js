@@ -1,5 +1,3 @@
-"use strict";
-
 /* global document localStorage fetch window */
 const user = JSON.parse(localStorage.getItem('user'));
 const spinner = document.querySelector('.spinner');
@@ -9,51 +7,40 @@ const content = document.querySelector('.content');
 const dispName = document.querySelector('#user-name');
 const logoutLink = document.querySelector('li.hide');
 const logoutBtn = document.querySelector('a#logout-btn');
-const dashLink = document.querySelector('li.logout'); // request users items (orders and post)
-
-const getUserItems = async token => {
+const dashLink = document.querySelector('li.logout');
+// request users items (orders and post)
+const getUserItems = async (token) => {
   const config = {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
   };
-
   try {
     const postRes = await fetch('https://auto-mart-ng.herokuapp.com/api/v1/car/users/posts', config);
     const orderRes = await fetch('https://auto-mart-ng.herokuapp.com/api/v1/order', config);
-    const {
-      error: postErr,
-      data: posts
-    } = await postRes.json();
-    const {
-      error: orderErr,
-      data: orders
-    } = await orderRes.json();
-
+    const { error: postErr, data: posts } = await postRes.json();
+    const { error: orderErr, data: orders } = await orderRes.json();
     if (postErr || orderErr) {
-      return {
-        error: { ...postErr,
-          ...orderErr
-        }
-      };
+      return { error: { ...postErr, ...orderErr } };
     }
-
-    return {
-      posts,
-      orders
-    };
+    return { posts, orders };
   } catch (error) {
-    return {
-      error
-    };
+    return { error };
   }
-}; // create Order table
+};
 
+// redirect to login
+const loginRedirect = () => {
+  const regex = new RegExp('github.io', 'gi');
+  const reponame = window.location.href.split('/')[3];
+  if (window.location.host.match(regex)) {
+    return `/${reponame}/sign-in.html`;
+  }
+  return '/sign-in.html';
+};
 
+// create Order table
 const createOrderTable = (table, data) => {
-  data.map(item => {
+  data.map((item) => {
     const row = document.createElement('tr');
     row.innerHTML = `
             <td>${item.created_on.split('T')[0]}</td>
@@ -72,7 +59,7 @@ const createOrderTable = (table, data) => {
 };
 
 const createPostTable = (table, data) => {
-  data.map(item => {
+  data.map((item) => {
     const row = document.createElement('tr');
     row.innerHTML = `
             <td class="hide-sm">${item.created_on.split('T')[0]}</td>
@@ -89,37 +76,16 @@ const createPostTable = (table, data) => {
     table.appendChild(row);
   });
 };
-
 const loadData = async () => {
   // no user token, the redirect to login
   if (!user) {
-    const regex = new RegExp('github.io', 'gi');
-    const reponame = window.location.href.split('/')[3];
-
-    if (window.location.host.match(regex)) {
-      return window.location.replace(`/${reponame}/sign-in.html`);
-    }
-
-    return window.location.replace('/sign-in.html');
+    window.location.replace(loginRedirect());
   }
-
-  const {
-    error,
-    posts,
-    orders
-  } = await getUserItems(user.token); // redirect back to  login if error
-
+  const { error, posts, orders } = await getUserItems(user.token);
+  // redirect back to  login if error
   if (error) {
-    const regex = new RegExp('github.io', 'gi');
-    const reponame = window.location.href.split('/')[3];
-
-    if (window.location.host.match(regex)) {
-      return window.location.replace(`/${reponame}/sign-in.html`);
-    }
-
-    return window.location.replace('/sign-in.html');
+    window.location.replace(loginRedirect());
   }
-
   spinner.classList.add('hide');
   createPostTable(postTable, posts);
   createOrderTable(orderTable, orders);
@@ -127,19 +93,13 @@ const loadData = async () => {
   content.classList.remove('hide');
   dashLink.classList.remove('hide');
   logoutLink.classList.remove('hide');
-}; // clear localstorage and redirect to login
+};
 
-
-logoutBtn.addEventListener('click', e => {
+// clear localstorage and redirect to login
+logoutBtn.addEventListener('click', (e) => {
   e.preventDefault();
   localStorage.removeItem('user');
-  const regex = new RegExp('github.io', 'gi');
-  const reponame = window.location.href.split('/')[3];
-
-  if (window.location.host.match(regex)) {
-    window.location.replace(`/${reponame}/sign-in.html`);
-  } else {
-    window.location.replace('/sign-in.html');
-  }
+  window.location.replace(loginRedirect());
 });
+
 loadData();
