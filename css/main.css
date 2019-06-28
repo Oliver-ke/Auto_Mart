@@ -212,8 +212,8 @@ a {
 	background: var(--danger-color);
 	color: #fff;
 }
-.alert-primary {
-	background: var(--primary-color);
+.alert-success {
+	background: #1ba94c;
 	color: #fff;
 }
 

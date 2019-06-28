@@ -21,20 +21,19 @@
       </a></h1>
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li><a href="pages.html">Pages</a></li>
       <li><a href="cars.html">Adverts</a></li>
-      <li><a href="dashboard.html">
+      <li><a class="current" href="dashboard.html">
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li><a href="sign-in.html">
+      <li class="logout"><a id="logout-btn" href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
       </li>
     </ul>
   </nav>
-  <section class="container">
+  <section class="container hide">
     <div class="head-text">
       <h1 class="large text-primary">
         Post Car Sale's Advert
@@ -50,18 +49,25 @@
     <div class="post-wrapper">
       <div class="form-container">
         <form action="dashboard.html" class="form">
+          <div class="alert alert-danger hide">
+          </div>
+          <div class="alert alert-success hide">
+          </div>
           <div class="form-group ">
-            <input type="text" name="carName" required placeholder=" Name of Car">
+            <input type="text" minlength="3" required="true" name="model" required placeholder=" Car Model">
           </div>
           <div class="form-group">
-            <input type="text" name="manufacturer" placeholder=" Manufacturer">
+            <input type="text" minlength="3" required="true" name="manufacturer" placeholder=" Manufacturer">
+          </div>
+          <div class="form-group">
+            <input type="text" minlength="3" required="true" name="body_type" placeholder=" Body-type e.g car, truck">
           </div>
           <div class="form-group">
             <input type="number" name="price" placeholder=" Price in Naira">
             <small>Enter car prices with Naira equivalent</small>
           </div>
           <div class="form-group py-1">
-            <select>
+            <select required="true" name="state">
               <option disabled selected>Choose Car state</option>
               <option value="new">New</option>
               <option value="used">Used</option>
@@ -72,9 +78,11 @@
               Choose Car image
             </label>
             <span class="file-name"><strong>No file Chosen</strong></span>
-            <input id="car-img" name="car-img" type="file" />
+            <input required="true" id="car-img" name="carImg" type="file" />
           </div>
+          <div class="spinner hide"></div>
           <input type="submit" value="Post Ads" class="btn btn-primary">
+
         </form>
       </div>
 
