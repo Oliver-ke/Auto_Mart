@@ -86,6 +86,8 @@ const loadData = async () => {
   if (error) {
     window.location.replace(loginRedirect());
   }
+  posts.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+  orders.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
   spinner.classList.add('hide');
   createPostTable(postTable, posts);
   createOrderTable(orderTable, orders);
