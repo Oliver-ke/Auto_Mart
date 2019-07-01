@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
- addCar, updateCar, getCar, deleteCar, getAllCars, getUserCars
+  addCar, updateCar, getCar, deleteCar, getAllCars, getUserCars,
 } from '../../db/queryHelpers/car';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
@@ -141,10 +141,28 @@ router.get('/users/posts', authMiddleware, async (req, res) => {
   return res.status(401).json({ status: 401, error: 'UnAuthorized user' });
 });
 
-// @route GET /car?status=avialable | /car?status=avialable&min_price&max_price
+// @route GET /car -> admin, /car?<queries> -> others
 // @desc view cars using query
-// @access Public, anyone can view cars
-router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, (req, res) => res.status(400).json({ status: 400, error: 'Invalid query parameters' }),);
+// @access Public, anyone can view cars, private to view sold and unsold
+router.get(
+  '/',
+  statusMiddleware,
+  minMaxMiddleWare,
+  stateMiddleware,
+  manufactureMiddleware,
+  authMiddleware,
+  async (req, res) => {
+    if (req.userData) {
+      const { isAdmin } = req.userData;
+      if (isAdmin) {
+        const { result: cars } = await getAllCars();
+        return res.status(200).json({ status: 200, data: cars });
+      }
+      return res.status(403).json({ status: 403, error: 'Access denied' });
+    }
+    return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
+  },
+);
 
 // @route DELETE /car/{car_id}
 // @desc Admin delete car ads endpoint
@@ -181,18 +199,6 @@ router.delete('/:car_id', authMiddleware, async (req, res) => {
     return res.status(500).json({ status: 500, error: 'Server error' });
   }
   return res.status(400).json({ status: 400, error: `Car id ${car_id} is not valid` });
-});
-
-// @route GET /car/amin/cars
-// @desc Admin view all car sold or unsold
-// @access Privat, only admin can view sold and unsold cars
-router.get('/admin/cars', authMiddleware, async (req, res) => {
-  const { isAdmin } = req.userData;
-  if (isAdmin) {
-    const { result: cars } = await getAllCars();
-    return res.status(200).json({ status: 200, data: cars });
-  }
-  return res.status(403).json({ status: 403, error: 'Access denied' });
 });
 
 export default router;

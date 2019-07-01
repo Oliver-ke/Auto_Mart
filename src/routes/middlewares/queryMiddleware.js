@@ -53,6 +53,9 @@ export const statusMiddleware = async (req, res, next) => {
     if (bodyType) {
       return bodyTypeMiddleware(req, res);
     }
+    if (Object.values(req.query).length === 0) {
+      return next();
+    }
     return res.status(400).json({ status: 400, error: 'invalid query parameter' });
   }
   if (status === 'available' && Object.keys(req.query).length > 1) {
