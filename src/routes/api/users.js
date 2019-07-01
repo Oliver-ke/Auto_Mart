@@ -3,10 +3,11 @@ import bcrypt from 'bcryptjs';
 import { isString } from 'util';
 import { updateUser, getUser } from '../../db/queryHelpers/user';
 import sendMail from '../../helper/sendMail';
+import authMiddleware from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-// @route GET /users/<:user-email>/reset_password
+// @route POST /users/<:user-email>/reset_password
 // @desc reset password
 // @private, only existing users can reset or retrive password
 router.post('/:user_email/reset_password', async (req, res) => {
@@ -60,6 +61,20 @@ router.post('/:user_email/reset_password', async (req, res) => {
     return res.status(500).json({ status: 500, error: 'Server error' });
   }
   return res.status(404).json({ status: 404, error: 'Not found' });
+});
+
+// @route GET /users
+// @desc Retrive the users information
+// @private, Only registered users with valid token gets here
+router.get('/', authMiddleware, async (req, res) => {
+  const { id } = req.userData;
+  const { result: user } = await getUser({ id });
+  if (user) {
+    // strip out the password from response data
+    const { password, ...resData } = user;
+    return res.status(200).json({ status: 200, data: resData });
+  }
+  return res.status(404).json({ status: 404, error: 'User does not exist' });
 });
 
 export default router;
