@@ -7,7 +7,7 @@ import app from '../../../src/server';
 chai.use(chaiHttp);
 chai.should();
 
-describe('api/v1/car/admin/cars', () => {
+describe('api/v1/car/', () => {
   describe('GET', () => {
     it('should get all cars for admin users', (done) => {
       const user = {
@@ -17,7 +17,7 @@ describe('api/v1/car/admin/cars', () => {
       chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
         chai
           .request(app)
-          .get('/api/v1/car/admin/cars')
+          .get('/api/v1/car/')
           .set('authorization', `Bearer ${res.body.data.token}`)
           .end((carErr, carRes) => {
             carRes.should.have.status(200);
@@ -36,7 +36,7 @@ describe('api/v1/car/admin/cars', () => {
       chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
         chai
           .request(app)
-          .get('/api/v1/car/admin/cars')
+          .get('/api/v1/car/')
           .set('authorization', `Bearer ${res.body.data.token}`)
           .end((carErr, carRes) => {
             carRes.should.have.status(403);
