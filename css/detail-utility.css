@@ -1,18 +1,14 @@
 .purchase-item {
 	display: grid;
-	grid-template-areas: 'purchase-img details';
+	grid-template-columns: 1fr 1fr;
 }
 
-/* or grid-template-areas: 'purchase-img' 'details'; */
-
 .detail-container {
-	grid-area: details;
+	padding-left: 1.5rem;
 }
 
 .purchase-img {
-	grid-area: purchase-img;
 	display: flex;
-	min-width: 100%;
 	justify-content: center;
 }
 
@@ -65,7 +61,7 @@ a.frud-link {
 @media (max-width: 700px) {
 	.purchase-item {
 		display: grid;
-		grid-template-areas: 'purchase-img' 'details';
+		grid-template-columns: 1fr;
 	}
 	.detail-container {
 		margin-left: -1rem !important;
