@@ -38,12 +38,22 @@ const loginRedirect = () => {
   return '/sign-in.html';
 };
 
+// formates date
+const formatDate = (date) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const current_datetime = new Date(date);
+  const formatted_date = `${current_datetime.getDate()} ${months[
+    current_datetime.getMonth()
+  ]} ${current_datetime.getFullYear()}`;
+  return formatted_date;
+};
+
 // create Order table
 const createOrderTable = (table, data) => {
   data.map((item) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-            <td>${item.created_on.split('T')[0]}</td>
+            <td>${formatDate(item.created_on)}</td>
             <td class="hide-sm">${item.car_price}</td>
             <td class="hide-sm">${item.amount}</td>
             <td>${item.status}</td>
@@ -62,12 +72,12 @@ const createPostTable = (table, data) => {
   data.map((item) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-            <td class="hide-sm">${item.created_on.split('T')[0]}</td>
+            <td class="hide-sm">${formatDate(item.created_on)}</td>
             <td>${item.model}</td>
             <td>${item.price}</td>
             <td class="hide-sm">${item.status}</td>
             <td> <button class="btn btn-danger">
-              <a href="update-car-price.html?car_id=${item.id}">
+              <a href="update-car.html?car_id=${item.id}">
                 View
               </a>
             </button>
