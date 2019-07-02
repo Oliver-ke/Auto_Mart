@@ -1,4 +1,4 @@
-/* global document localStorage fetch window */
+/* global document localStorage fetch */
 
 const form = document.querySelector('form');
 const carContainer = document.querySelector('#car-container');
@@ -19,9 +19,6 @@ const state = document.querySelector('select[name=state]');
 const updateUI = (cars) => {
   carContainer.innerHTML = '';
   cars.map((car) => {
-    //     const {
-    //  model, state, price, carImg
-    // } = car;
     const newCar = `
         <img src=${car.img_url} alt="car-img" class="car-img">
         <p class="name mx-1">${car.model}</p>
@@ -38,6 +35,14 @@ const updateUI = (cars) => {
   });
 };
 
+const setNavLinks = () => {
+  if (JSON.parse(localStorage.getItem('user'))) {
+    document.querySelector('li#dash-link').classList.remove('hide');
+    document.querySelector('li#sign-in').classList.remove('hide');
+    document.querySelector('#login').classList.add('hide');
+  }
+};
+
 const fetchData = async (query = null) => {
   let url = 'https://auto-mart-ng.herokuapp.com/api/v1/car?status=available';
   if (query) {
@@ -48,7 +53,6 @@ const fetchData = async (query = null) => {
       const value = Object.values(query);
       const key = Object.keys(query);
       url = `https://auto-mart-ng.herokuapp.com/api/v1/car?${key}=${value}`;
-      console.log(url);
     } else {
       const value = Object.values(query);
       const key = Object.keys(query);
@@ -72,6 +76,7 @@ const fetchData = async (query = null) => {
 };
 
 const initializer = async () => {
+  setNavLinks();
   spinner.classList.remove('hide');
   const { cars, error } = await fetchData();
   cars.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
@@ -110,7 +115,6 @@ const handleSubmit = async (e) => {
     result = cars ? [...cars, ...result] : [...result];
   }
   if (bodyType.value) {
-    console.log('yes');
     const query = { body_type: bodyType.value };
     const { cars } = await fetchData(query);
     result = cars ? [...cars, ...result] : [...result];

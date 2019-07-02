@@ -3,21 +3,11 @@
 	grid-template-columns: 1fr 1fr;
 }
 
-.detail-container {
-	padding-left: 1.5rem;
-}
 
 .purchase-img {
 	display: flex;
 	justify-content: center;
 }
-
-/* .detail-container .btn {
-	padding: 0.2rem 0;
-	line-height: 2rem;
-	font-size: 1rem;
-	background: #f9c001 !important;
-} */
 
 .detail-container .btn:hover {
 	opacity: 0.8;
