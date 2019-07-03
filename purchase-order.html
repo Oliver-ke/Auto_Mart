@@ -22,11 +22,15 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cars.html">Adverts</a></li>
-      <li><a href="dashboard.html">
+      <li id="login"><a href="sign-in.html">
+          <i class="fas fa-sign-in-alt">
+          </i>
+          Login</a></li>
+      <li id="dash-link" class="hide"><a class="current" href="dashboard.html">
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li><a href="sign-in.html">
+      <li id="sign-in" class="hide"><a href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
@@ -37,7 +41,7 @@
     <button class="btn btn-primary">
       <a class="back-btn" href="cars.html">
         <span class="text-primary"><i class="fas fa-angle-left"></i></span>
-        Back to Car Adverts
+        Back to Adverts
       </a>
     </button>
     <div class="head-text">
@@ -71,7 +75,9 @@
             <p>State |<span> New </span></p>
           </div>
           <div class="biding-price">
-            <p class="my-1"> Enter Biding Price |</p>
+            <div>
+              <p> Enter Your Biding Price</p>
+            </div>
             <div class="form-group">
               <input type="number" name="biding-price" placeholder=" Price in Naira">
             </div>
@@ -84,7 +90,7 @@
     </div>
 
   </section>
-  <script src="js/purchaseOrder.js"></script>
+  <script src="js/order.js"></script>
 </body>
 
 </html>
