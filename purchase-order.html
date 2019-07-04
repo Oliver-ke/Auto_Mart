@@ -22,6 +22,7 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cars.html">Adverts</a></li>
+      <li id="register"><a href="sign-up.html">Register</a></li>
       <li id="login"><a href="sign-in.html">
           <i class="fas fa-sign-in-alt">
           </i>
@@ -30,14 +31,14 @@
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li id="sign-in" class="hide"><a href="sign-in.html">
+      <li id="sign-in" class="hide"><a id="logout-btn" href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
       </li>
     </ul>
   </nav>
-  <section class="container-full">
+  <section class="container-full hide">
     <button class="btn btn-primary">
       <a class="back-btn" href="cars.html">
         <span class="text-primary"><i class="fas fa-angle-left"></i></span>
@@ -54,27 +55,37 @@
     </div>
     <div class="purchase-item">
       <div class="purchase-img">
-        <img src="img/cr18.png" alt="car-img">
+        <img id="img_url" alt="car-img">
       </div>
       <div class="detail-container mx-2">
         <form class="form">
           <div class="car-detail bg-dark my-1">
-            <p>Car Name |<span> Toyota Land Cruser </span></p>
+            <p>Car Model |<span id="model"></span></p>
           </div>
 
           <div class="car-detail bg-dark my-1">
-            <p>Manufacturer |<span> Toyota Inc </span></p>
+            <p>Manufacturer |<span id="manufacturer"></span></p>
           </div>
           <div class="car-detail bg-dark my-1">
-            <p>Price |<span> #250000</span></p>
+            <p>Price |<span id="price"></span></p>
           </div>
           <div class="car-detail bg-dark my-1">
-            <p>Pub date |<span> 5th Oct 2019 </span></p>
+            <p>Pub date |<span id="created_on"></span></p>
           </div>
           <div class="car-detail bg-dark my-1">
-            <p>State |<span> New </span></p>
+            <p>State |<span id="state"></span></p>
+          </div>
+          <div class="car-detail bg-dark my-1">
+            <p>Status |<span id="status"></span></p>
+          </div>
+          <div class="car-detail bg-dark my-1">
+            <p>Body-type |<span id="body_type"></span></p>
+          </div>
+          <div class="alert hide">
           </div>
           <div class="biding-price">
+            <div class="alert hide">
+            </div>
             <div>
               <p> Enter Your Biding Price</p>
             </div>
@@ -82,14 +93,16 @@
               <input type="number" name="biding-price" placeholder=" Price in Naira">
             </div>
           </div>
-          <input type="submit" value="Place Order" class="btn btn-primary my-1">
+          <input name="biding-price" type="submit" value="Place Order" class="btn btn-primary my-1">
+          <div class="spinner order hide"></div>
         </form>
         <a class="frud-link" href="fraud-ads.html">Roport Advert as Fraudulent</a>
       </div>
-
     </div>
-
   </section>
+  <div class="container">
+    <div class="spinner"></div>
+  </div>
   <script src="js/order.js"></script>
 </body>
 
