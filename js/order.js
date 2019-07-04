@@ -39,7 +39,7 @@ const showAlert = (msg, alert, type) => {
 	}
 	alert.classList.add(`alert-${type}`);
 	alert.innerHTML = ` <i class="fas fa-info-circle"></i> ${msg}`;
-	setTimeout(() => alert.classList.add('hide'), 6000);
+	setTimeout(() => alert.classList.add('hide'), 4000);
 };
 
 // update ui
@@ -85,7 +85,7 @@ const makeOrder = async (newData, token) => {
 		headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
 	};
 	try {
-		const url = 'https://cors-anywhere.herokuapp.com/http://auto-mart-ng.herokuapp.com/api/v1/order';
+		const url = 'https://auto-mart-ng.herokuapp.com/api/v1/order';
 		const res = await fetch(url, config);
 		const data = await res.json();
 		return await data;
@@ -131,7 +131,7 @@ const orderHandler = async (e) => {
 	e.preventDefault();
 	const price = priceInput.value;
 	const carId = getCarId();
-	const order = { amount: price, car_id: Number(carId), status: 'pending' };
+	const order = { amount: price, car_id: carId.toString(), status: 'pending' };
 	// Check usser
 	const user = JSON.parse(localStorage.getItem('user'));
 	if (!user) {
@@ -140,15 +140,17 @@ const orderHandler = async (e) => {
 	const { token } = user;
 	let errors = {};
 	let newOrder = {};
+	let resStatus = null;
 	spinner2.classList.remove('hide');
 	if (price === '') {
 		spinner2.classList.add('hide');
 		return showAlert('Price cannot be empty', alert, 'danger');
 	}
 	if (price !== '') {
-		const { error: orderErr, data: orderData } = await makeOrder(order, token);
-		errors = { orderErr };
-		newOrder = { orderData };
+		const { error: orderErr, status, data: orderData } = await makeOrder(order, token);
+		errors = orderErr;
+		newOrder = orderData;
+		resStatus = status;
 	}
 	if (Object.values(errors).length > 0) {
 		spinner2.classList.add('hide');
@@ -156,6 +158,13 @@ const orderHandler = async (e) => {
 		// return show alerts
 		if (typeof errors === 'object') {
 			return showAlert(Object.values(errors), alert, 'danger');
+		}
+		if (resStatus && resStatus === 401) {
+			showAlert('Authentication error, please login or register', alert, 'danger');
+			return redirect('sign-in.html');
+		}
+		if (resStatus && resStatus === 409) {
+			return showAlert('You have already placed order for this advert', alert, 'danger');
 		}
 		return showAlert(errors, alert, 'danger');
 	}
@@ -165,7 +174,8 @@ const orderHandler = async (e) => {
 		priceInput.classList.add('hidden');
 		priceInput.value = '';
 		loadDetail();
-		return showAlert('Order was Successful', alert, 'success');
+		showAlert('Order was Successful', alert, 'success');
+		return redirect('dashboard.html');
 	}
 	spinner2.classList.add('hide');
 	// reaching here means no input
