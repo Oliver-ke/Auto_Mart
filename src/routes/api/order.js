@@ -99,6 +99,17 @@ router.patch('/:order_id/price', authMiddleware, async (req, res) => {
   }
   return res.status(400).json({ status: 400, error: 'parameter not understood' });
 });
+// @route GET /api/v1/order/<order_id>
+// @desc get specific order
+// @access Public
+router.get('/:order_id', async (req, res) => {
+  const { order_id: orderId } = req.params;
+  const { result, error } = await getOrder({ id: Number(orderId) });
+  if (!error && result.length > 0) {
+    return res.status(200).json({ status: 200, data: result[0] });
+  }
+  return res.status(404).json({ status: 404, error: 'Order does not exist' });
+});
 
 // @route GET /api/v1/order
 // @desc get users orders
