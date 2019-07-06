@@ -58,6 +58,10 @@ a.frud-link {
 		margin-right: -1rem !important;
 	}
 
+	button.btn {
+		margin-bottom: 0.5rem;
+	}
+
 	.biding-price p {
 		font-size: 0.9rem;
 		padding-top: 0.5rem;
