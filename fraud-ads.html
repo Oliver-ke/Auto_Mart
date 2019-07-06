@@ -22,11 +22,16 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cars.html">Adverts</a></li>
-      <li><a class="current" href="dashboard.html">
+      <li id="register"><a href="sign-up.html">Register</a></li>
+      <li id="login"><a href="sign-in.html">
+          <i class="fas fa-sign-in-alt">
+          </i>
+          Login</a></li>
+      <li id="dash-link" class="hide"><a class="current" href="dashboard.html">
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li><a href="sign-in.html">
+      <li id="sign-in" class="hide"><a id="logout-btn" href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
@@ -38,16 +43,26 @@
       Report Fraudulent Advert
     </h1>
     <form action="" class="form">
+      <div class="alert hide">
+      </div>
       <p class="lead my-2">
         <span class="bar">|</span>
-        Your Message
+        Your Reasons
       </p>
-      <textarea name="message" id="report" cols="30" rows="6"></textarea>
-      <a href="purchase-order.html" class="btn">Cancel</a>
+      <textarea required="true" name="reason" cols="30" rows="2"></textarea>
+      <p class="lead my-2">
+        <span class="bar">|</span>
+        Description
+      </p>
+      <textarea required="true" name="description" cols="30" rows="4"></textarea>
+      <a href="cars.html" class="btn">Cancel</a>
       <input type="submit" class="btn my-1" value="Send">
     </form>
-
   </section>
+  <div class="container">
+    <div class="spinner hide"></div>
+  </div>
+  <script src="js/fraud.js"></script>
 </body>
 
 </html>
