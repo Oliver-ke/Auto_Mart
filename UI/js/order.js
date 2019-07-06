@@ -40,7 +40,7 @@ const showAlert = (msg, alert, type) => {
   }
   alert.classList.add(`alert-${type}`);
   alert.innerHTML = ` <i class="fas fa-info-circle"></i> ${msg}`;
-  setTimeout(() => alert.classList.add('hide'), 4000);
+  setTimeout(() => alert.classList.add('hide'), 6000);
 };
 
 // update ui
@@ -155,7 +155,7 @@ const orderHandler = async (e) => {
     newOrder = orderData;
     resStatus = status;
   }
-  if (Object.values(errors).length > 0) {
+  if (errors && Object.values(errors).length > 0) {
     spinner2.classList.add('hide');
     priceInput.value = '';
     // return show alerts
@@ -171,7 +171,7 @@ const orderHandler = async (e) => {
     }
     return showAlert(errors, alert, 'danger');
   }
-  if (Object.values(newOrder).length > 0) {
+  if (newOrder && Object.values(newOrder).length > 0) {
     // return success alert
     spinner2.classList.add('hide');
     priceInput.classList.add('hidden');

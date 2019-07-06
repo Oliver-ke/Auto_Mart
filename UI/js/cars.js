@@ -1,4 +1,4 @@
-/* global document localStorage fetch */
+/* global document localStorage fetch window */
 
 const form = document.querySelector('form');
 const carContainer = document.querySelector('#car-container');
@@ -79,6 +79,9 @@ const initializer = async () => {
   setNavLinks();
   spinner.classList.remove('hide');
   const { cars, error } = await fetchData();
+  if (!cars) {
+    window.location.reload();
+  }
   cars.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
   spinner.classList.add('hide');
   if (!error) {
