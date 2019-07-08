@@ -9,6 +9,7 @@ export default async (userData) => {
       last_name: userData.last_name,
       id: userData.id,
       email: userData.email,
+      isAdmin: userData.is_admin,
       token,
     };
     return { error: null, user };
