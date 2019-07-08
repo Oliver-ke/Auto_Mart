@@ -1,3 +1,4 @@
+/* Table */
 .table th,
 td {
 	padding: 1rem;
@@ -16,12 +17,69 @@ td {
 	color: #fff;
 }
 
+/* Badges */
+.badges {
+	display: flex;
+	width: 100%;
+	justify-content: space-evenly;
+}
+
+.badge {
+	font-size: 1.2rem;
+	padding: 0.5rem;
+	text-align: center;
+	margin: 0.3rem;
+	background: var(--light-color);
+	color: #333;
+	border-radius: 3px;
+	width: 100%;
+}
+
+.badge .figure {
+	color: var(--secondary-color);
+}
+
+.badge-primary {
+	background: var(--primary-color);
+	color: #fff;
+}
+
+.badge-light {
+	background: var(--light-color);
+	color: #333;
+}
+
+.badge-dark {
+	background: var(--dark-color);
+	color: #fff;
+}
+
+.badge-danger {
+	background: var(--danger-color);
+	color: #fff;
+}
+
+.badge-success {
+	background: var(--success-color);
+	color: #fff;
+}
+
+.badge-white {
+	background: #fff;
+	color: #333;
+	border: #ccc solid 1px;
+}
+
 /* Responsiveness */
 @media screen and (max-width: 700px) {
 	.container {
 		width: 100%;
 		padding-left: 0.3rem;
 		padding-right: 0.3rem;
+	}
+	.badges .badge {
+		font-size: 0.7rem;
+		padding: 0.3rem;
 	}
 	button.btn {
 		font-size: 0.7rem;
@@ -33,9 +91,9 @@ td {
 		padding: 0.5rem;
 		text-align: left;
 	}
-	.dash-buttons a {
-		display: block;
-		width: auto;
+	.dash-buttons {
+		display: flex;
+		justify-content: space-evenly;
 		margin-bottom: 0.2rem;
 	}
 }
