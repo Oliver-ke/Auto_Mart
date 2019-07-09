@@ -1,4 +1,4 @@
-input[value='Delete Advert'].btn {
+button[id='delete'].btn {
 	background: var(--danger-color) !important;
 }
 

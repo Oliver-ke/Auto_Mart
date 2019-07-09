@@ -12,7 +12,7 @@
   <link href="css/main.css" rel="stylesheet" type="text/css">
   <link href="css/detail-utility.css" rel="stylesheet" type="text/css">
   <link href="css/update-car-price.css" rel="stylesheet" type="text/css">
-  <title>AutoMart | View Advert</title>
+  <title>AutoMart | Update Advert Price</title>
 </head>
 
 <body>
@@ -22,22 +22,21 @@
       </a></h1>
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li><a href="pages.html">Pages</a></li>
       <li><a href="cars.html">Adverts</a></li>
-      <li><a href="dashboard.html">
+      <li class="hide"><a class="current" href="dashboard.html">
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li><a href="sign-in.html">
+      <li class="hide logout"><a id="logout-btn" href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
       </li>
     </ul>
   </nav>
-  <section class="container">
+  <section class="container-full hide">
     <button class="btn btn-primary">
-      <a class="back-btn" href="Admin-dashboard.html">
+      <a class="back-btn" href="dashboard.html">
         <span class="text-primary"><i class="fas fa-angle-left"></i></span>
         Back to Dashboard
       </a>
@@ -49,34 +48,54 @@
     </div>
     <div class="purchase-item">
       <div class="purchase-img">
-        <img src="img/cr9.jpg" alt="car-img">
+        <img id="img_url" src="img/cr1.jpg" alt="car-img">
       </div>
       <div class="detail-container mx-2">
         <form class="form">
           <div class="car-detail bg-dark my-1">
-            <p>Car Name |<span> Toyota Camry </span></p>
+            <p>Car Model |<span id="model"></span></p>
           </div>
 
           <div class="car-detail bg-dark my-1">
-            <p>Manufacturer |<span> Toyota Inc </span></p>
+            <p>Manufacturer |<span id="manufacturer"></span></p>
           </div>
           <div class="car-detail bg-dark my-1">
-            <p>Price |<span> #250000</span></p>
+            <p>Price |<span id="price"></span></p>
           </div>
           <div class="car-detail bg-dark my-1">
-            <p>Pub date |<span> 5th Oct 2019 </span></p>
+            <p>Pub date |<span id="created_on"></span></p>
           </div>
           <div class="car-detail bg-dark my-1">
-            <p>State |<span> New </span></p>
+            <p>State |<span id="state"></span></p>
           </div>
+          <div class="car-detail bg-dark my-1">
+            <p>Status |<span id="status"></span></p>
+          </div>
+          <div class="car-detail bg-dark my-1">
+            <p>Body-type |<span id="body_type"></span></p>
+          </div>
+          <div class="alert hide">
+          </div>
+          <input type="checkbox" name="status" value="sold"> Mark as Sold<br>
+          <button id="change-price" class="btn">Change Price</button>
+          <div class="form-group hidden">
+            <div>
+              <input class="hidden" type="number" name="updatePrice" placeholder=" New Price">
+            </div>
+          </div>
+          <input type="submit" value="Save" class="btn btn-primary">
+
           <input type="submit" value="Delete Advert" class="btn btn-primary">
         </form>
+        <div class="spinner update hide"></div>
       </div>
 
     </div>
-
   </section>
-  <script src="js/updatePostPrice.js"></script>
+  <div class="container">
+    <div class="spinner"></div>
+  </div>
+  <script src="js/updateCar.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 /* global document localStorage fetch window */
 // target DOM elements
 const editBtn = document.querySelector('#change-price');
+const deleteBtn = document.querySelector('#delete');
 const logoutLink = document.querySelector('li.hide');
 const logoutBtn = document.querySelector('a#logout-btn');
 const dashLink = document.querySelector('li.logout');
@@ -67,13 +68,17 @@ const updateUI = (data) => {
 };
 
 // Fetch car data
-const fetchData = async (id) => {
+const sendReqest = async (id, method = 'GET', token = '') => {
+  const config = {
+    method,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+  };
   if (id) {
     try {
       const url = `https://auto-mart-ng.herokuapp.com/api/v1/car/${id}`;
-      const res = await fetch(url);
-      const { data: car } = await res.json();
-      return { car };
+      const res = await fetch(url, config);
+      const { data: car, status } = await res.json();
+      return { car, status };
     } catch (error) {
       return { error };
     }
@@ -114,16 +119,28 @@ const loadDetail = async () => {
   if (!user) {
     return redirect('sign-in.html');
   }
-  const { car, error } = await fetchData(carId);
+  const { car, error } = await sendReqest(carId);
   if (error) {
+    if (user.isAdmin) {
+      return redirect('admin-dashboard.html');
+    }
     return redirect('dashboard.html');
   }
   const {
  email, owner, id, ...rest 
 } = car;
   updateUI(rest);
-  statusInput.checked = rest.status === 'sold';
-  statusInput.setAttribute('status', rest.status);
+  if (!user.isAdmin) {
+    statusInput.checked = rest.status === 'sold';
+    statusInput.setAttribute('status', rest.status);
+  } else {
+    // hide update controls since user is admin
+    editBtn.classList.add('hide');
+    priceInput.classList.add('hide');
+    statusInput.classList.add('hide');
+    document.querySelector('#update').classList.add('hide');
+    document.querySelector('#status-txt').classList.add('hide');
+  }
   spinner.classList.add('hide');
   content.classList.remove('hide');
   dashLink.classList.remove('hide');
@@ -180,6 +197,24 @@ const updateHandler = async (e) => {
 };
 
 updateForm.onsubmit = e => updateHandler(e);
+
+// handles delete
+deleteBtn.addEventListener('click', async () => {
+  const carId = getCarId();
+  const user = JSON.parse(localStorage.getItem('user'));
+  spinner2.classList.remove('hide');
+  const { status, error } = await sendReqest(carId, 'DELETE', user.token);
+  spinner2.classList.add('hide');
+  if (!error && status === 200) {
+    showAlert('Advert Deleted', alert, 'success');
+    if (user.isAdmin) {
+      return redirect('admin-dashboard.html');
+    }
+    return redirect('dashboard.html');
+  }
+  showAlert(error, alert, 'danger');
+  return redirect('sign-in.html');
+});
 
 // clear localstorage and redirect to login once logout click
 logoutBtn.addEventListener('click', (e) => {
