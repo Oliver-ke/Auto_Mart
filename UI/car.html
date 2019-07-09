@@ -11,7 +11,7 @@
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href="css/main.css" rel="stylesheet" type="text/css">
   <link href="css/detail-utility.css" rel="stylesheet" type="text/css">
-  <link href="css/update-car-price.css" rel="stylesheet" type="text/css">
+  <link href="css/car.css" rel="stylesheet" type="text/css">
   <title>AutoMart | Update Advert Price</title>
 </head>
 
@@ -23,7 +23,7 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cars.html">Adverts</a></li>
-      <li class="hide"><a class="current" href="dashboard.html">
+      <li class="hide"><a id="dashlink" class="current" href="dashboard.html">
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
@@ -36,7 +36,7 @@
   </nav>
   <section class="container-full hide">
     <button class="btn btn-primary">
-      <a class="back-btn" href="dashboard.html">
+      <a id="backLink" class="back-btn" href="dashboard.html">
         <span class="text-primary"><i class="fas fa-angle-left"></i></span>
         Back to Dashboard
       </a>
@@ -76,16 +76,17 @@
           </div>
           <div class="alert hide">
           </div>
-          <input type="checkbox" name="status" value="sold"> Mark as Sold<br>
+          <input type="checkbox" name="status" value="sold">
+          <span id="status-txt">Mark as Sold<br></span>
           <button id="change-price" class="btn">Change Price</button>
           <div class="form-group hidden">
             <div>
               <input class="hidden" type="number" name="updatePrice" placeholder=" New Price">
             </div>
           </div>
-          <input type="submit" value="Save" class="btn btn-primary">
+          <input type="submit" value="Save" name="save" id="update" class="btn btn-primary">
 
-          <input type="submit" value="Delete Advert" class="btn btn-primary">
+          <button type="button" id="delete" class="btn btn-primary">Delete advert</button>
         </form>
         <div class="spinner update hide"></div>
       </div>
@@ -95,7 +96,7 @@
   <div class="container">
     <div class="spinner"></div>
   </div>
-  <script src="js/updateCar.js"></script>
+  <script src="js/car.js"></script>
 </body>
 
 </html>
