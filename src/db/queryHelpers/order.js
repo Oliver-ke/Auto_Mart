@@ -8,7 +8,7 @@ export const addOrder = async (orderData) => {
   const query = {
     text: `INSERT INTO orders(
       ${columns}
-    ) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`,
+    ) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
     values,
   };
   try {

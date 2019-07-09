@@ -5,8 +5,8 @@ import app from '../../../src/server';
 
 chai.use(chaiHttp);
 chai.should();
-describe('api/v1/order/<:order_id>/price', () => {
-  describe('PATCH', () => {
+describe('Updata order', () => {
+  describe('Order Price', () => {
     it('Should accept update price request', (done) => {
       const user = {
         email: 'Bobmartins2@gmail.com',
@@ -85,6 +85,41 @@ describe('api/v1/order/<:order_id>/price', () => {
             updateRes.body.should.be.a('object');
             updateRes.body.should.have.property('error');
             done();
+          });
+      });
+    });
+  });
+  describe('Order status', () => {
+    it('Should prevent owner from updating status', (done) => {
+      const user = {
+        first_name: 'Real',
+        last_name: 'Man',
+        email: 'real@gmail.com',
+        password: 'bobbing',
+        address: 'Elekahia estate PH',
+      };
+      chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
+        const newOrder = {
+          car_id: '5',
+          amount: '223456',
+        };
+        chai
+          .request(app)
+          .post('/api/v1/order')
+          .set('authorization', `Bearer ${res.body.data.token}`)
+          .send(newOrder)
+          .end((orderErr, orderRes) => {
+            chai
+              .request(app)
+              .patch(`/api/v1/order/${orderRes.body.data.id}/status`)
+              .send({ status: 'accepted' })
+              .set('authorization', `Bearer ${res.body.data.token}`)
+              .end((updateErr, updateRes) => {
+                updateRes.should.have.status(403);
+                updateRes.body.should.be.a('object');
+                updateRes.body.should.have.property('error');
+                done();
+              });
           });
       });
     });
