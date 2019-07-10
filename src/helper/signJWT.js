@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export default async (userData) => {
-  const payload = { id: userData.id, email: userData.email, isAdmin: userData.is_admin };
+  const payload = { id: userData.id, email: userData.email, is_admin: userData.is_admin };
   try {
     const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 });
     const user = {
@@ -9,7 +9,7 @@ export default async (userData) => {
       last_name: userData.last_name,
       id: userData.id,
       email: userData.email,
-      isAdmin: userData.is_admin,
+      is_admin: userData.is_admin,
       token,
     };
     return { error: null, user };

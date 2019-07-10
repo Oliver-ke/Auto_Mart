@@ -153,12 +153,12 @@ router.get(
   authMiddleware,
   async (req, res) => {
     if (req.userData) {
-      const { isAdmin } = req.userData;
+      const { is_admin: isAdmin } = req.userData;
       if (isAdmin) {
         const { result: cars } = await getAllCars();
         return res.status(200).json({ status: 200, data: cars });
       }
-      return res.status(403).json({ status: 403, error: 'Access denied' });
+      return res.status(403).json({ status: 403, error: 'Access denied, user is not admin' });
     }
     return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
   },
@@ -169,7 +169,7 @@ router.get(
 // @access Privat, only admin or car owner can delete car ads
 router.delete('/:car_id', authMiddleware, async (req, res) => {
   const car_id = req.params.car_id ? +req.params.car_id : null;
-  const { isAdmin, id } = req.userData ? req.userData : null;
+  const { is_admin: isAdmin, id } = req.userData ? req.userData : null;
   if (car_id) {
     // check if user is admin or normal user
     if (!isAdmin) {

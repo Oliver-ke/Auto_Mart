@@ -121,7 +121,7 @@ const loadDetail = async () => {
     return redirect('dashboard.html');
   }
   const {
- email, owner, id, ...rest 
+ email, owner, id, ...rest
 } = car;
   updateUI(rest);
   setNavLinks();
@@ -141,7 +141,7 @@ const orderHandler = async (e) => {
   if (!user) {
     return showAlert('Create account or login to place order', alert, 'danger');
   }
-  if (user.isAdmin) {
+  if (user.is_admin) {
     return showAlert('User is Admin, please login as ordinary user', alert, 'danger');
   }
   const { token } = user;

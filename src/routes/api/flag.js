@@ -31,7 +31,7 @@ router.post('/', authMiddleware, async (req, res) => {
 // @desc Admin get flag post
 // @access Private, only admin can view get all flags
 router.get('/', authMiddleware, async (req, res) => {
-  const { isAdmin } = req.userData;
+  const { is_admin: isAdmin } = req.userData;
   if (isAdmin) {
     const { result: flags, error } = await getFlags();
     if (!error) {
@@ -39,14 +39,14 @@ router.get('/', authMiddleware, async (req, res) => {
     }
     return res.status(500).json({ status: 500, error: 'Server Error' });
   }
-  return res.status(403).json({ status: 403, error: 'Access denied' });
+  return res.status(403).json({ status: 403, error: 'Access denied, User is not Admin' });
 });
 
 // @route DELETE /flag
 // @desc Admin delete flag post
 // @access Private, only admin can delete flag
 router.delete('/:flag_id', authMiddleware, async (req, res) => {
-  const { isAdmin } = req.userData;
+  const { is_admin: isAdmin } = req.userData;
   const { flag_id: flagId } = req.params;
   if (isAdmin) {
     const { result, error } = await deleteFlag(flagId);
@@ -58,7 +58,7 @@ router.delete('/:flag_id', authMiddleware, async (req, res) => {
     }
     return res.status(500).json({ status: 500, error: 'Server Error' });
   }
-  return res.status(403).json({ status: 403, error: 'Access denied' });
+  return res.status(403).json({ status: 403, error: 'Access denied, User is not Admin' });
 });
 
 export default router;
