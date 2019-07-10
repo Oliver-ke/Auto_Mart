@@ -34,15 +34,18 @@ router.post('/', authMiddleware, async (req, res) => {
         return res.status(400).json({ status: 400, error: 'Cannot place order for your own advert' });
       }
       // before adding a new order check if order for the same car already exist
-      const { result: privOrder } = await getOrder({ car_id: car.id });
+      const { result: orders } = await getOrder({ car_id: +car.id });
+      const privOrder = orders.filter(order => order.buyer === req.userData.id);
       if (!privOrder[0]) {
         newOrder.car_price = car.price;
+        newOrder.car_owner = car.owner;
         const { error, result } = await addOrder(newOrder);
         if (!error) {
           // format response to numeric types
           const resData = {
             id: result.id,
             car_id: +result.car_id,
+            car_owner: +result.car_owner,
             created_on: result.created_on,
             status: result.status,
             price: +result.car_price,
@@ -99,6 +102,45 @@ router.patch('/:order_id/price', authMiddleware, async (req, res) => {
   }
   return res.status(400).json({ status: 400, error: 'parameter not understood' });
 });
+
+// @route PATCH /api/v1/order/<:order_id>/status
+// @desc Upate order status
+// @access Private, Only car owner can accept or reject order
+router.patch('/:order_id/status', authMiddleware, async (req, res) => {
+  let { order_id } = req.params;
+  let { status } = req.body;
+  // parse params to number type
+  order_id = +order_id;
+  status = status.toLowerCase() === 'accepted' || status === 'rejected' ? status.toLowerCase() : null;
+  const userId = req.userData.id;
+  if (status) {
+    const { result: foundOrder } = await getOrder({ id: order_id });
+    const order = foundOrder[0];
+    if (!order) {
+      return res.status(404).json({ status: 404, error: 'Order not found' });
+    }
+    // check if the user is the current car owner;
+    const { result: car } = await getCar({ id: order.car_id });
+    if (car.owner !== userId) {
+      return res.status(403).json({ status: 403, error: 'Access denied' });
+    }
+    const { error, result } = await updateOrder(order_id, { status });
+    if (!error) {
+      const resData = {
+        id: result.id,
+        car_id: +result.car_id,
+        status: result.status,
+        old_price_offered: +order.amount,
+        new_price_offered: +result.amount,
+        car_price: +order.car_price,
+      };
+      return res.status(200).json({ status: 200, data: resData });
+    }
+    return res.status(500).json({ status: 500, error: 'Server error' });
+  }
+  return res.status(400).json({ status: 400, error: 'parameter not understood' });
+});
+
 // @route GET /api/v1/order/<order_id>
 // @desc get specific order
 // @access Public
@@ -112,7 +154,7 @@ router.get('/:order_id', async (req, res) => {
 });
 
 // @route GET /api/v1/order
-// @desc get users orders
+// @desc get buyers orders
 // @access Private, only authenticated users can have orders
 router.get('/', authMiddleware, async (req, res) => {
   const { id: userId } = req.userData;
@@ -128,6 +170,21 @@ router.get('/', authMiddleware, async (req, res) => {
   return res.status(401).json({ status: 401, error: 'UnAuthorized user' });
 });
 
-// @todo -> users(buyer) should not place order for the same car twice
+// @route GET /api/v1/order/seller/orders
+// @desc get sellers orders
+// @access Private, Get orders to a sellers post
+router.get('/seller/orders', authMiddleware, async (req, res) => {
+  const { id: userId } = req.userData;
+  if (userId) {
+    const { result } = await getOrder({ car_owner: userId });
+    if (result) {
+      return res.status(200).json({ status: 200, data: result });
+    }
+    // having userId and no result even an empty array, this must be a server error
+    return res.status(500).json({ status: 500, error: 'Server error' });
+  }
+  // how did this user even get through our middleware
+  return res.status(401).json({ status: 401, error: 'UnAuthorized user' });
+});
 
 export default router;

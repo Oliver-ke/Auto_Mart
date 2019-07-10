@@ -19,6 +19,7 @@ const orderTable = `CREATE TABLE IF NOT EXISTS
       orders(
         id SERIAL PRIMARY KEY,
         car_id BIGINT NOT NULL REFERENCES cars(id) ON DELETE CASCADE,
+        car_owner BIGINT NOT NULL REFERENCES users(id),
         car_price NUMERIC NOT NULL,
         amount NUMERIC NOT NULL,
         status VARCHAR(20) NOT NULL,
@@ -29,7 +30,7 @@ const orderTable = `CREATE TABLE IF NOT EXISTS
 const flagTable = `CREATE TABLE IF NOT EXISTS
       flags(
         id SERIAL PRIMARY KEY,
-        car_id INT NOT NULL REFERENCES cars(id),
+        car_id INT NOT NULL REFERENCES cars(id) ON DELETE CASCADE,
         created_on DATE NOT NULL,
         reason VARCHAR(200) NOT NULL,
         description VARCHAR(250) NOT NULL
