@@ -121,16 +121,16 @@ const loadDetail = async () => {
   }
   const { car, error } = await sendReqest(carId);
   if (error) {
-    if (user.isAdmin) {
+    if (user.is_admin) {
       return redirect('admin-dashboard.html');
     }
     return redirect('dashboard.html');
   }
   const {
- email, owner, id, ...rest 
+ email, owner, id, ...rest
 } = car;
   updateUI(rest);
-  if (!user.isAdmin) {
+  if (!user.is_admin) {
     statusInput.checked = rest.status === 'sold';
     statusInput.setAttribute('status', rest.status);
   } else {
@@ -207,7 +207,7 @@ deleteBtn.addEventListener('click', async () => {
   spinner2.classList.add('hide');
   if (!error && status === 200) {
     showAlert('Advert Deleted', alert, 'success');
-    if (user.isAdmin) {
+    if (user.is_admin) {
       return redirect('admin-dashboard.html');
     }
     return redirect('dashboard.html');

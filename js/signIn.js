@@ -35,7 +35,7 @@ const handleSubmit = async (e) => {
     if (data) {
       spinner.classList.add('hide');
       localStorage.setItem('user', JSON.stringify(data));
-      if (data.isAdmin) {
+      if (data.is_admin) {
         const regex = new RegExp('github.io', 'gi');
         const reponame = window.location.href.split('/')[3];
         if (window.location.host.match(regex)) {

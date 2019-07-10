@@ -66,7 +66,7 @@ const createCarTb = (table, data) => {
 
 const loadData = async () => {
   // no user token, the redirect to login
-  if (!user || !user.isAdmin) {
+  if (!user || !user.is_admin) {
     redirect('sign-in.html');
   }
   const { error, cars } = await getAdminItems(user.token);

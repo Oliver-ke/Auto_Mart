@@ -91,7 +91,7 @@ const loadData = async () => {
 	if (!user) {
 		return redirect('sign-in.html');
 	}
-	if (user.isAdmin) {
+	if (user.is_admin) {
 		return redirect('admin-dashboard.html');
 	}
 	const { error, posts, orders } = await getUserItems(user.token);
