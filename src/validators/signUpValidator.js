@@ -4,33 +4,33 @@ import isEmpty from './isEmpty';
 export default (data) => {
   const errors = {};
   const userData = data;
-  userData.first_name = !isEmpty(userData.first_name) ? userData.first_name : '';
-  userData.last_name = !isEmpty(userData.last_name) ? userData.last_name : '';
-  userData.email = !isEmpty(userData.email) ? userData.email : '';
-  userData.password = !isEmpty(userData.password) ? userData.password : '';
-  userData.address = !isEmpty(userData.address) ? userData.address : '';
+  userData.first_name = !isEmpty(userData.first_name) ? userData.first_name.toString() : '';
+  userData.last_name = !isEmpty(userData.last_name) ? userData.last_name.toString() : '';
+  userData.email = !isEmpty(userData.email) ? userData.email.toString() : '';
+  userData.password = !isEmpty(userData.password) ? userData.password.toString() : '';
+  userData.address = !isEmpty(userData.address) ? userData.address.toString() : '';
 
   if (!validator.isLength(userData.first_name, { min: 2, max: 15 })) {
-    errors.firstName = 'First name must be between 2 and 15 characters';
+    errors.first_name = 'First name must be between 2 and 15 characters';
   }
 
   if (!validator.isAlpha(userData.first_name)) {
-    errors.firstName = 'First name must be an alphabet';
+    errors.first_name = 'First name must be an alphabet';
   }
 
   if (!validator.isLength(userData.last_name, { min: 2, max: 15 })) {
-    errors.lastName = 'Last Name must be between 2 and 15 characters';
-  }
-
-  if (validator.isEmpty(data.last_name)) {
-    errors.firstName = 'Last name field is required';
-  }
-  if (!validator.isAlpha(userData.last_name)) {
-    errors.firstName = 'Last name must be an alphabet';
+    errors.last_name = 'Last Name must be between 2 and 15 characters';
   }
 
   if (validator.isEmpty(data.first_name)) {
-    errors.lastName = 'First name field is required';
+    errors.first_Name = 'First_name field is required';
+  }
+  if (!validator.isAlpha(userData.last_name)) {
+    errors.last_name = 'Last_name must be an alphabet';
+  }
+
+  if (validator.isEmpty(data.last_name)) {
+    errors.last_name = 'last_name field is required';
   }
 
   if (!validator.isLength(userData.address, { min: 5, max: 35 })) {

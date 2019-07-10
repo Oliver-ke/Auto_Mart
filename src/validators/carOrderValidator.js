@@ -4,8 +4,8 @@ import isEmpty from './isEmpty';
 export default (data) => {
   const errors = {};
   const orderData = { ...data };
-  orderData.amount = !isEmpty(orderData.amount) ? orderData.amount : '';
-  orderData.car_id = !isEmpty(orderData.car_id) ? orderData.car_id : '';
+  orderData.amount = !isEmpty(orderData.amount) ? orderData.amount.toString() : '';
+  orderData.car_id = !isEmpty(orderData.car_id) ? orderData.car_id.toString() : '';
 
   if (Validator.isEmpty(orderData.amount)) {
     errors.amount = 'amount field is required';
@@ -21,7 +21,7 @@ export default (data) => {
   }
 
   if (!Validator.isNumeric(orderData.amount)) {
-    errors.amount = 'amount must be a number';
+    errors.amount = 'Amount must be a number';
   }
 
   if (!Validator.isNumeric(orderData.car_id)) {

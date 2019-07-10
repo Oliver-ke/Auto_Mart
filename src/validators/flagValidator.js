@@ -4,9 +4,10 @@ import isEmpty from './isEmpty';
 export default (flagData) => {
   const errors = {};
   const data = flagData;
-  data.car_id = !isEmpty(data.car_id) ? data.car_id : '';
-  data.reason = !isEmpty(data.reason) ? data.reason : '';
-  data.description = !isEmpty(data.description) ? data.description : '';
+  // check if field is empty convert to string to prevent breaking
+  data.car_id = !isEmpty(data.car_id) ? data.car_id.toString() : '';
+  data.reason = !isEmpty(data.reason) ? data.reason.toString() : '';
+  data.description = !isEmpty(data.description) ? data.description.toString() : '';
 
   //  check for empty fields
   if (validator.isEmpty(data.car_id)) {

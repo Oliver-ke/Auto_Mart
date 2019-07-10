@@ -4,15 +4,15 @@ import isEmpty from './isEmpty';
 export default (data) => {
   const errors = {};
   const carData = { ...data };
-  carData.state = !isEmpty(carData.state) ? carData.state : '';
-  carData.status = !isEmpty(carData.status) ? carData.status : 'available';
+  carData.state = !isEmpty(carData.state) ? carData.state.toString() : '';
+  carData.status = !isEmpty(carData.status) ? carData.status.toString() : 'available';
 
-  carData.price = !isEmpty(carData.price) ? carData.price : '';
+  carData.price = !isEmpty(carData.price) ? carData.price.toString() : '';
 
-  carData.manufacturer = !isEmpty(carData.manufacturer) ? carData.manufacturer : '';
-  carData.model = !isEmpty(carData.model) ? carData.model : '';
+  carData.manufacturer = !isEmpty(carData.manufacturer) ? carData.manufacturer.toString() : '';
+  carData.model = !isEmpty(carData.model) ? carData.model.toString() : '';
 
-  carData.body_type = !isEmpty(carData.body_type) ? carData.body_type : '';
+  carData.body_type = !isEmpty(carData.body_type) ? carData.body_type.toString() : '';
 
   if (Validator.isEmpty(carData.state)) {
     errors.state = 'State field is required';
