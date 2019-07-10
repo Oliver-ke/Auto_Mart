@@ -16,11 +16,11 @@ chai.should();
 
 describe('api/v1/auth/signup', () => {
   describe('POST', () => {
-    it('Initialize db and clear priv data', async () => {
+    it('Initialize db and clear previous data', async () => {
       await pool.clearDb();
       const res = await initializeDb();
       chai.assert.isTrue(res);
-    });
+    }).timeout(6000);
     it('should add a user', (done) => {
       const user = {
         email: 'unclebob@gmail.com',
