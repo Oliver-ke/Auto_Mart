@@ -9,7 +9,7 @@ import validateSignInRequest from '../../validators/signInValidator';
 import signJWT from '../../helper/signJWT';
 
 // db query functions
-import { addUser, getUser } from '../../db/queryHelpers/user';
+import { addItem, getItems } from '../../db/queryHelpers/helper';
 
 const router = express.Router();
 
@@ -35,13 +35,14 @@ router.post('/signup', async (req, res) => {
     const hash = await bcrypt.hash(newUser.password, salt);
     newUser.password = hash;
     // try adding user, errors if email already exist
-    const { error, result } = await addUser(newUser);
+    const { error, result } = await addItem('users', newUser);
     if (!error) {
-      const { user } = await signJWT(result);
-      return res.status(201).json({ status: 201, data: user });
+      const { user: signedUser } = await signJWT(result);
+      res.set('Authorization', `Bearer ${signedUser.token}`);
+      return res.status(201).json({ status: 201, data: signedUser });
     }
     if (error === 'duplicate key value violates unique constraint "users_email_key"') {
-      return res.status(400).json({ status: 400, error: 'Email already exist' });
+      return res.status(409).json({ status: 409, error: 'Email already exist' });
     }
     return res.status(500).json({ status: 500, error: 'Server Error' });
   } catch (error) {
@@ -57,16 +58,19 @@ router.post('/signin', async (req, res) => {
   if (!isValid) {
     return res.status(400).json({ status: 400, error: errors });
   }
-  let { password, email } = req.body;
+  let { email } = req.body;
+  const { password } = req.body;
   email = email.toLowerCase();
   try {
     // find the user with the given email
-    const { result, error } = await getUser({ email });
-    if (result) {
-      const isMatch = await bcrypt.compare(password, result.password);
+    const { result: userArr, error } = await getItems('users', { email });
+    const user = userArr[0];
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        const { user } = await signJWT(result);
-        return res.status(200).json({ status: 200, data: user });
+        const { user: signedUser } = await signJWT(user);
+        res.set('Authorization', `Bearer ${signedUser.token}`);
+        return res.status(200).json({ status: 200, data: signedUser });
       }
       return res.status(401).json({ status: 401, error: 'Incorrect email or password' });
     }

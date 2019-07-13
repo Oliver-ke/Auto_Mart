@@ -5,8 +5,8 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
-  addCar, updateCar, getCar, deleteCar, getAllCars, getUserCars,
-} from '../../db/queryHelpers/car';
+ addItem, getItems, updateItem, deleteItem 
+} from '../../db/queryHelpers/helper';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
   stateMiddleware,
@@ -27,13 +27,15 @@ router.post('/', authMiddleware, async (req, res) => {
   }
   const carImg = req.files ? req.files.carImg : null;
   const newCar = {
-    ...req.body,
     owner: req.userData.id,
     created_on: new Date(),
     email: req.userData.email ? req.userData.email.toLowerCase() : 'none',
+    state: req.body.state,
     price: +req.body.price,
     status: req.body.status ? req.body.status : 'available',
     manufacturer: req.body.manufacturer.toLowerCase(),
+    model: req.body.model.toLowerCase(),
+    body_type: req.body.body_type.toLowerCase(),
   };
 
   try {
@@ -41,12 +43,12 @@ router.post('/', authMiddleware, async (req, res) => {
       const uploadResult = await uploadToCloudinary(carImg);
       newCar.img_url = uploadResult.secure_url;
     }
-    const { error, result } = await addCar(newCar);
+    const { error, result } = await addItem('cars', newCar);
     if (!error) {
       result.price = +result.price;
       return res.status(201).json({ status: 201, data: result });
     }
-    return res.status(400).json({ status: 400, error: 'Invalid parameters' });
+    return res.status(500).json({ status: 500, error: 'Server database Error' });
   } catch (err) {
     return res.status(500).json({ status: 500, error: 'Server Error' });
   }
@@ -66,14 +68,15 @@ router.patch('/:car_id/status', authMiddleware, async (req, res) => {
       return res.status(400).json({ status: 400, error: 'Car_id must be a number' });
     }
     // Ensure car exist and belongs to the user
-    const { result: car } = await getCar({ id: car_id });
+    const { result: carArr } = await getItems('cars', { id: car_id });
+    const car = carArr[0];
     if (!car) {
       return res.status(404).json({ status: 404, error: 'Not found' });
     }
     if (car.owner !== userId) {
       return res.status(403).json({ status: 403, error: 'Access denied' });
     }
-    const { error, result } = await updateCar(car_id, { status });
+    const { error, result } = await updateItem('cars', car_id, { status });
     if (!error) {
       result.price = +result.price;
       return res.status(200).json({ status: 200, data: result });
@@ -93,14 +96,15 @@ router.patch('/:car_id/price', authMiddleware, async (req, res) => {
   price = isNaN(+price) ? null : +price;
   const userId = +req.userData.id;
   if (car_id && price) {
-    const { result: car } = await getCar({ id: car_id });
+    const { result: carArr } = await getItems('cars', { id: car_id });
+    const car = carArr[0];
     if (!car) {
       return res.status(404).json({ status: 404, error: 'Not found' });
     }
     if (car.owner !== userId) {
       return res.status(403).json({ status: 403, error: 'Access denied' });
     }
-    const { error, result } = await updateCar(car_id, { price });
+    const { error, result } = await updateItem('cars', car_id, { price });
     if (!error) {
       result.price = +result.price;
       return res.status(200).json({ status: 200, data: result });
@@ -116,11 +120,12 @@ router.patch('/:car_id/price', authMiddleware, async (req, res) => {
 router.get('/:car_id', async (req, res) => {
   const { car_id } = req.params;
   if (car_id) {
-    const { result } = await getCar({ id: car_id });
-    if (!result) {
+    const { result: carArr } = await getItems('cars', { id: car_id });
+    const car = carArr[0];
+    if (!car) {
       return res.status(404).json({ status: 404, error: `car with id ${car_id} does not exist` });
     }
-    return res.status(200).json({ status: 200, data: result });
+    return res.status(200).json({ status: 200, data: car });
   }
   return res.status(400).json({ status: 400, error: 'car_id should be a number type' });
 });
@@ -132,9 +137,9 @@ router.get('/users/posts', authMiddleware, async (req, res) => {
   // the user is identified by the Auth middleware which adds userData to req object
   const { id: userId } = req.userData;
   if (userId) {
-    const { result } = await getUserCars(userId);
-    if (result) {
-      return res.status(200).json({ status: 200, data: result });
+    const { result: carArr } = await getItems('cars', { owner: userId });
+    if (carArr) {
+      return res.status(200).json({ status: 200, data: carArr });
     }
     return res.status(500).json({ status: 500, error: 'Server error' });
   }
@@ -155,7 +160,7 @@ router.get(
     if (req.userData) {
       const { is_admin: isAdmin } = req.userData;
       if (isAdmin) {
-        const { result: cars } = await getAllCars();
+        const { result: cars } = await getItems('cars');
         return res.status(200).json({ status: 200, data: cars });
       }
       return res.status(403).json({ status: 403, error: 'Access denied, user is not admin' });
@@ -165,7 +170,7 @@ router.get(
 );
 
 // @route DELETE /car/{car_id}
-// @desc Admin delete car ads endpoint
+// @desc Admin/car_owner delete car ads endpoint
 // @access Privat, only admin or car owner can delete car ads
 router.delete('/:car_id', authMiddleware, async (req, res) => {
   const car_id = req.params.car_id ? +req.params.car_id : null;
@@ -174,10 +179,11 @@ router.delete('/:car_id', authMiddleware, async (req, res) => {
     // check if user is admin or normal user
     if (!isAdmin) {
       // check if car exist and belongs to the user
-      const { result: car } = await getCar({ id: car_id });
+      const { result: carArr } = await getItems('cars', { id: car_id });
+      const car = carArr[0];
       if (car && car.owner === +id) {
         // issue delete
-        const { result } = await deleteCar(car_id);
+        const { result } = await deleteItem('cars', car_id);
         if (result) {
           return res.status(200).json({ status: 200, data: 'Car Ad successfully deleted' });
         }
@@ -188,11 +194,12 @@ router.delete('/:car_id', authMiddleware, async (req, res) => {
       return res.status(403).json({ status: 403, error: 'Access denied' });
     }
     // then this user is admin, check if car exist
-    const { result: car } = await getCar({ id: car_id });
+    const { result: carArr } = await getItems('cars', { id: car_id });
+    const car = carArr[0];
     if (!car) {
       return res.status(404).json({ status: 404, error: `Car with id ${car_id} does not exist` });
     }
-    const { result } = await deleteCar(car_id);
+    const { result } = await deleteItem('cars', car_id);
     if (result) {
       return res.status(200).json({ status: 200, data: 'Car Ad successfully deleted' });
     }
