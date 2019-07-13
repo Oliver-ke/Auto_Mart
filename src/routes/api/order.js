@@ -29,10 +29,6 @@ router.post('/', authMiddleware, async (req, res) => {
   const car = carArr[0];
   if (car) {
     if (car.status !== 'sold') {
-      // prevent users from placing order for their own car ads post
-      if (car.owner === req.userData.id) {
-        return res.status(400).json({ status: 400, error: 'Cannot place order for your own advert' });
-      }
       // before adding a new order check if order for the same car already exist
       const { result: orders } = await getItems('orders', { car_id: +car.id });
       const privOrder = orders.filter(order => order.buyer === req.userData.id);

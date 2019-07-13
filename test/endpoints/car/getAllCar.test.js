@@ -9,7 +9,7 @@ chai.should();
 
 describe('api/v1/car/', () => {
   describe('GET', () => {
-    it('should get all cars for admin users', (done) => {
+    it('should get all cars for admin', (done) => {
       const user = {
         email: 'isAdmin@gmail.com',
         password: 'admin',
@@ -28,20 +28,24 @@ describe('api/v1/car/', () => {
           });
       });
     });
-    it('should prevent access to none admin useers', (done) => {
+    it('should get all cars for ordinary users', (done) => {
       const user = {
-        email: 'testUser@gmail.com',
-        password: 'password',
+        first_name: 'Dominic',
+        last_name: 'Ben',
+        email: 'DomBenk@gmail.com',
+        password: 'lifeLearner',
+        address: 'Elekahia estate port harcourt',
       };
-      chai.request(app).post('/api/v1/auth/signin').send(user).end((err, res) => {
+      chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
         chai
           .request(app)
           .get('/api/v1/car/')
           .set('authorization', `Bearer ${res.body.data.token}`)
           .end((carErr, carRes) => {
-            carRes.should.have.status(403);
+            carRes.should.have.status(200);
             carRes.body.should.be.a('object');
-            carRes.body.should.have.property('error');
+            carRes.body.should.have.property('data');
+            carRes.body.data.should.be.a('array');
             done();
           });
       });
