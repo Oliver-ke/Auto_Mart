@@ -61,7 +61,7 @@ describe('api/v1/auth/signup', () => {
       };
       chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
         res.body.should.be.a('object');
-        res.body.should.have.status(400);
+        res.body.should.have.status(409);
         done();
       });
     });
