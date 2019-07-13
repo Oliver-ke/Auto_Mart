@@ -2,8 +2,7 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carOrderValidator from '../../validators/carOrderValidator';
-import { getCar } from '../../db/queryHelpers/car';
-import { addOrder, updateOrder, getOrder } from '../../db/queryHelpers/order';
+import { getItems, addItem, updateItem } from '../../db/queryHelpers/helper';
 
 const router = express.Router();
 
@@ -26,7 +25,8 @@ router.post('/', authMiddleware, async (req, res) => {
   };
 
   // Check for car with the given car_id before adding order
-  const { result: car } = await getCar({ id: newOrder.car_id });
+  const { result: carArr } = await getItems('cars', { id: newOrder.car_id });
+  const car = carArr[0];
   if (car) {
     if (car.status !== 'sold') {
       // prevent users from placing order for their own car ads post
@@ -34,12 +34,12 @@ router.post('/', authMiddleware, async (req, res) => {
         return res.status(400).json({ status: 400, error: 'Cannot place order for your own advert' });
       }
       // before adding a new order check if order for the same car already exist
-      const { result: orders } = await getOrder({ car_id: +car.id });
+      const { result: orders } = await getItems('orders', { car_id: +car.id });
       const privOrder = orders.filter(order => order.buyer === req.userData.id);
       if (!privOrder[0]) {
         newOrder.car_price = car.price;
         newOrder.car_owner = car.owner;
-        const { error, result } = await addOrder(newOrder);
+        const { error, result } = await addItem('orders', newOrder);
         if (!error) {
           // format response to numeric types
           const resData = {
@@ -73,8 +73,8 @@ router.patch('/:order_id/price', authMiddleware, async (req, res) => {
   price = +price;
   const userId = req.userData.id;
   if (typeof order_id === 'number' && typeof price === 'number') {
-    const { result: foundOrder } = await getOrder({ id: order_id });
-    const order = foundOrder[0];
+    const { result: orderArr } = await getItems('orders', { id: order_id });
+    const order = orderArr[0];
     if (!order) {
       return res.status(404).json({ status: 404, error: 'Order not found' });
     }
@@ -86,7 +86,7 @@ router.patch('/:order_id/price', authMiddleware, async (req, res) => {
     if (order.status !== 'pending') {
       return res.status(403).json({ status: 403, error: 'Cannot update order with status not pending' });
     }
-    const { error, result } = await updateOrder(order_id, { amount: price });
+    const { error, result } = await updateItem('orders', order_id, { amount: price });
     if (!error) {
       const resData = {
         id: result.id,
@@ -114,17 +114,18 @@ router.patch('/:order_id/status', authMiddleware, async (req, res) => {
   status = status.toLowerCase() === 'accepted' || status === 'rejected' ? status.toLowerCase() : null;
   const userId = req.userData.id;
   if (status) {
-    const { result: foundOrder } = await getOrder({ id: order_id });
-    const order = foundOrder[0];
+    const { result: orderArr } = await getItems('orders', { id: order_id });
+    const order = orderArr[0];
     if (!order) {
       return res.status(404).json({ status: 404, error: 'Order not found' });
     }
     // check if the user is the current car owner;
-    const { result: car } = await getCar({ id: order.car_id });
+    const { result: carsArr } = await getItems('cars', { id: order.car_id });
+    const car = carsArr[0];
     if (car.owner !== userId) {
       return res.status(403).json({ status: 403, error: 'Access denied' });
     }
-    const { error, result } = await updateOrder(order_id, { status });
+    const { error, result } = await updateItem('orders', order_id, { status });
     if (!error) {
       const resData = {
         id: result.id,
@@ -146,7 +147,7 @@ router.patch('/:order_id/status', authMiddleware, async (req, res) => {
 // @access Public
 router.get('/:order_id', async (req, res) => {
   const { order_id: orderId } = req.params;
-  const { result, error } = await getOrder({ id: Number(orderId) });
+  const { result, error } = await getItems('orders', { id: Number(orderId) });
   if (!error && result.length > 0) {
     return res.status(200).json({ status: 200, data: result[0] });
   }
@@ -159,7 +160,7 @@ router.get('/:order_id', async (req, res) => {
 router.get('/', authMiddleware, async (req, res) => {
   const { id: userId } = req.userData;
   if (userId) {
-    const { result } = await getOrder({ buyer: userId });
+    const { result } = await getItems('orders', { buyer: userId });
     if (result) {
       return res.status(200).json({ status: 200, data: result });
     }
@@ -176,7 +177,7 @@ router.get('/', authMiddleware, async (req, res) => {
 router.get('/seller/orders', authMiddleware, async (req, res) => {
   const { id: userId } = req.userData;
   if (userId) {
-    const { result } = await getOrder({ car_owner: userId });
+    const { result } = await getItems('orders', { car_owner: userId });
     if (result) {
       return res.status(200).json({ status: 200, data: result });
     }

@@ -1,7 +1,7 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import flagInputValitator from '../../validators/flagValidator';
-import { addFlag, getFlags, deleteFlag } from '../../db/queryHelpers/flag';
+import { addItem, getItems, deleteItem } from '../../db/queryHelpers/helper';
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.post('/', authMiddleware, async (req, res) => {
     reason: req.body.reason,
     description: req.body.description,
   };
-  const { result } = await addFlag(newFlag);
+  const { result } = await addItem('flags', newFlag);
   if (result) {
     return res.status(201).json({ status: 201, data: result });
   }
@@ -33,7 +33,7 @@ router.post('/', authMiddleware, async (req, res) => {
 router.get('/', authMiddleware, async (req, res) => {
   const { is_admin: isAdmin } = req.userData;
   if (isAdmin) {
-    const { result: flags, error } = await getFlags();
+    const { result: flags, error } = await getItems('flags');
     if (!error) {
       return res.status(200).json({ status: 200, data: flags });
     }
@@ -49,7 +49,7 @@ router.delete('/:flag_id', authMiddleware, async (req, res) => {
   const { is_admin: isAdmin } = req.userData;
   const { flag_id: flagId } = req.params;
   if (isAdmin) {
-    const { result, error } = await deleteFlag(flagId);
+    const { result, error } = await deleteItem('flags', flagId);
     if (!error) {
       if (result) {
         return res.status(200).json({ status: 200, data: 'Flag successfully deleted' });
