@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
- addItem, getItems, updateItem, deleteItem 
+ addItem, getItems, updateItem, deleteItem
 } from '../../db/queryHelpers/helper';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
@@ -149,17 +149,25 @@ router.get('/users/posts', authMiddleware, async (req, res) => {
 // @route GET /car -> admin, /car?<queries> -> others
 // @desc view cars using query
 // @access Public, anyone can view cars, private to view sold and unsold
-router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, async (req, res) => {
-  if (req.userData) {
-    const { is_admin: isAdmin } = req.userData;
-    if (isAdmin) {
-      const { result: cars } = await getItems('cars');
-      return res.status(200).json({ status: 200, data: cars });
+router.get(
+  '/',
+  statusMiddleware,
+  minMaxMiddleWare,
+  stateMiddleware,
+  manufactureMiddleware,
+  authMiddleware,
+  async (req, res) => {
+    if (req.userData) {
+      const { is_admin: isAdmin } = req.userData;
+      if (isAdmin) {
+        const { result: cars } = await getItems('cars');
+        return res.status(200).json({ status: 200, data: cars });
+      }
+      return res.status(403).json({ status: 403, error: 'Access denied, user is not admin' });
     }
-    return res.status(403).json({ status: 403, error: 'Access denied, user is not admin' });
-  }
-  return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
-});
+    return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
+  },
+);
 
 // @route DELETE /car/{car_id}
 // @desc Admin/car_owner delete car ads endpoint
