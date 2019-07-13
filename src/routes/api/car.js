@@ -93,8 +93,8 @@ router.patch('/:car_id/price', authMiddleware, async (req, res) => {
   const { car_id } = req.params;
   let { price } = req.body;
   // parse price to number type
-  price = isNaN(+price) ? null : +price;
-  const userId = +req.userData.id;
+  price = Number(price);
+  const userId = Number(req.userData.id);
   if (car_id && price) {
     const { result: carArr } = await getItems('cars', { id: car_id });
     const car = carArr[0];
@@ -150,8 +150,15 @@ router.get('/users/posts', authMiddleware, async (req, res) => {
 // @desc view cars using query
 // @access Public, anyone can view cars, private to view sold and unsold
 router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, async (req, res) => {
-  const { result: cars } = await getItems('cars');
-  return res.status(200).json({ status: 200, data: cars });
+  if (req.userData) {
+    const { is_admin: isAdmin } = req.userData;
+    if (isAdmin) {
+      const { result: cars } = await getItems('cars');
+      return res.status(200).json({ status: 200, data: cars });
+    }
+    return res.status(403).json({ status: 403, error: 'Access denied, user is not admin' });
+  }
+  return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
 });
 
 // @route DELETE /car/{car_id}

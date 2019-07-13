@@ -68,7 +68,7 @@ router.patch('/:order_id/price', authMiddleware, async (req, res) => {
   order_id = +order_id;
   price = +price;
   const userId = req.userData.id;
-  if (typeof order_id === 'number' && typeof price === 'number') {
+  if (order_id && price) {
     const { result: orderArr } = await getItems('orders', { id: order_id });
     const order = orderArr[0];
     if (!order) {
