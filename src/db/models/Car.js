@@ -10,7 +10,7 @@ const Car = `CREATE TABLE IF NOT EXISTS
         manufacturer VARCHAR(100) NOT NULL,
         model VARCHAR(100) NOT NULL,
         body_type VARCHAR(100) NOT NULL,
-        img_url VARCHAR(250)
+        image_url VARCHAR(250)
       )`;
 
 export default Car;

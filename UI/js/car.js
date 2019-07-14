@@ -52,7 +52,7 @@ const updateUI = (data) => {
   const keys = Object.keys(data);
   const values = Object.values(data);
   keys.map((key, index) => {
-    if (key === 'img_url') {
+    if (key === 'image_url') {
       // set for img
       document.querySelector(`img#${key}`).src = values[index];
     } else if (key === 'created_on') {
