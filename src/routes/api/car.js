@@ -25,7 +25,7 @@ router.post('/', authMiddleware, async (req, res) => {
   if (!isValid) {
     return res.status(400).json({ status: 400, errors });
   }
-  const carImg = req.files ? req.files.carImg : null;
+  const carImg = req.files ? req.files.image_url : null;
   const newCar = {
     owner: req.userData.id,
     created_on: new Date(),
@@ -41,7 +41,7 @@ router.post('/', authMiddleware, async (req, res) => {
   try {
     if (carImg !== null) {
       const uploadResult = await uploadToCloudinary(carImg);
-      newCar.img_url = uploadResult.secure_url;
+      newCar.image_url = uploadResult.secure_url;
     }
     const { error, result } = await addItem('cars', newCar);
     if (!error) {
@@ -49,7 +49,7 @@ router.post('/', authMiddleware, async (req, res) => {
       return res.status(201).json({ status: 201, data: result });
     }
     return res.status(500).json({ status: 500, error: 'Server database Error' });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({ status: 500, error: 'Server Error' });
   }
 });

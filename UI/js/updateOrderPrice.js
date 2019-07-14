@@ -131,7 +131,7 @@ const loadDetail = async () => {
     return redirect('dashboard.html');
   }
   const {
- model, img_url: imgUrl, price, email, state, manufacturer 
+ model, image_url: imgUrl, price, email, state, manufacturer 
 } = car;
   const info = {
     model,
