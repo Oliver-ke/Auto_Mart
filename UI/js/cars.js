@@ -20,7 +20,7 @@ const updateUI = (cars) => {
   carContainer.innerHTML = '';
   cars.map((car) => {
     const newCar = `
-        <img src=${car.img_url} alt="car-img" class="car-img">
+        <img src=${car.image_url} alt="car-img" class="car-img">
         <p class="name mx-1">${car.model}</p>
         <div class="tags p-1">
           <p class="state">State: <span>${car.state}</span></p>

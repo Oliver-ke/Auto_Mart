@@ -11,7 +11,7 @@ let carData = {
   price: '',
   model: '',
   body_type: '',
-  carImg: '',
+  image_url: '',
   state: '',
 };
 

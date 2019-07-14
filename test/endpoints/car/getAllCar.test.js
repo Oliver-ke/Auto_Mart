@@ -28,27 +28,5 @@ describe('api/v1/car/', () => {
           });
       });
     });
-    it('should get all cars for ordinary users', (done) => {
-      const user = {
-        first_name: 'Dominic',
-        last_name: 'Ben',
-        email: 'DomBenk@gmail.com',
-        password: 'lifeLearner',
-        address: 'Elekahia estate port harcourt',
-      };
-      chai.request(app).post('/api/v1/auth/signup').send(user).end((err, res) => {
-        chai
-          .request(app)
-          .get('/api/v1/car/')
-          .set('authorization', `Bearer ${res.body.data.token}`)
-          .end((carErr, carRes) => {
-            carRes.should.have.status(200);
-            carRes.body.should.be.a('object');
-            carRes.body.should.have.property('data');
-            carRes.body.data.should.be.a('array');
-            done();
-          });
-      });
-    });
   });
 });
