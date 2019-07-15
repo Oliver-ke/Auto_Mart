@@ -1,15 +1,13 @@
-import {
-  getUnsoldCars,
-  getCarWithQuery,
-  getCarBetweenMaxMinPrice,
-  getAllCarsWithQuery,
-} from '../../db/queryHelpers/car';
+import { getItems, getItemsBetween } from '../../db/queryHelpers/helper';
 
 export const minMaxMiddleWare = async (req, res, next) => {
   const minPrice = req.query.min_price ? +req.query.min_price : null;
   const maxPrice = req.query.max_price ? +req.query.max_price : null;
   if (minPrice && maxPrice) {
-    const { result } = await getCarBetweenMaxMinPrice({ min: minPrice, max: maxPrice });
+    const { result } = await getItemsBetween('cars', 'price', { min: minPrice, max: maxPrice }, [
+      'status',
+      'available',
+    ]);
     return res.status(200).json({ status: 200, data: result });
   }
   return next();
@@ -19,7 +17,7 @@ export const stateMiddleware = async (req, res, next) => {
   let { state } = req.query;
   state = state ? state.toLowerCase() : null;
   if (state === 'new' || state === 'used') {
-    const { result } = await getCarWithQuery({ state });
+    const { result } = await getItems('cars', { state }, ['status', 'available']);
     return res.status(200).json({ status: 200, data: result });
   }
   return next();
@@ -28,7 +26,7 @@ export const stateMiddleware = async (req, res, next) => {
 export const manufactureMiddleware = async (req, res, next) => {
   const manufacturer = req.query.manufacturer ? req.query.manufacturer.toLowerCase() : null;
   if (manufacturer) {
-    const { result } = await getCarWithQuery({ manufacturer });
+    const { result } = await getItems('cars', { manufacturer }, ['status', 'available']);
     return res.status(200).json({ status: 200, data: result });
   }
   return next();
@@ -37,7 +35,7 @@ export const manufactureMiddleware = async (req, res, next) => {
 const bodyTypeMiddleware = async (req, res) => {
   const bodyType = req.query.body_type ? req.query.body_type.toLowerCase() : null;
   if (bodyType) {
-    const { error, result } = await getAllCarsWithQuery({ body_type: bodyType });
+    const { error, result } = await getItems('cars', { body_type: bodyType });
     if (error) {
       return res.status(500).json({ status: 500, error: 'Server error' });
     }
@@ -61,6 +59,6 @@ export const statusMiddleware = async (req, res, next) => {
   if (status === 'available' && Object.keys(req.query).length > 1) {
     return next();
   }
-  const { result } = await getUnsoldCars();
+  const { result } = await getItems('cars', { status });
   return res.status(200).json({ status: 200, data: result });
 };
