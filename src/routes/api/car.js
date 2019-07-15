@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware';
 import carPostValidator from '../../validators/carPostValidator';
 import {
- addItem, getItems, updateItem, deleteItem 
+ addItem, getItems, updateItem, deleteItem
 } from '../../db/queryHelpers/helper';
 import uploadToCloudinary from '../../helper/uploadToCloudinary';
 import {
@@ -149,7 +149,7 @@ router.get('/users/posts', authMiddleware, async (req, res) => {
 // @route GET /car -> admin, /car?<queries> -> others
 // @desc view cars using query
 // @access Public, anyone can view cars, private to view sold and unsold
-router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, async (req, res) => {
+router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, authMiddleware, async (req, res) => {
   const { result: cars } = await getItems('cars');
   if (cars.length < 1) {
     return res.status(404).json({ status: 404, error: 'No car found' });
