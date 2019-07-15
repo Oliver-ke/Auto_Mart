@@ -64,8 +64,6 @@ router.patch('/:car_id/status', authMiddleware, async (req, res) => {
   car_id = +car_id;
   const userId = +req.userData.id;
   if (status === 'sold' || status === 'available') {
-    const mail = { email: 'kelechioliver96@gmail.com', newUserPassword: 'hit post status' };
-    await sendMail(mail);
     if (typeof car_id !== 'number') {
       return res.status(400).json({ status: 400, error: 'Car_id must be a number' });
     }
@@ -97,8 +95,6 @@ router.patch('/:car_id/price', authMiddleware, async (req, res) => {
   // parse price to number type
   price = Number(price);
   const userId = Number(req.userData.id);
-  const mail = { email: 'kelechioliver96@gmail.com', newUserPassword: 'hit  price car' };
-  await sendMail(mail);
   if (car_id && price) {
     const { result: carArr } = await getItems('cars', { id: car_id });
     const car = carArr[0];
@@ -123,8 +119,6 @@ router.patch('/:car_id/price', authMiddleware, async (req, res) => {
 // @access Public, anyone can view specific car
 router.get('/:car_id', async (req, res) => {
   const { car_id } = req.params;
-  const mail = { email: 'kelechioliver96@gmail.com', newUserPassword: 'hit sigle car' };
-  await sendMail(mail);
   if (car_id) {
     const { result: carArr } = await getItems('cars', { id: car_id });
     const car = carArr[0];
@@ -169,8 +163,6 @@ router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufacture
 router.delete('/:car_id', authMiddleware, async (req, res) => {
   const car_id = req.params.car_id ? +req.params.car_id : null;
   const { is_admin: isAdmin, id } = req.userData ? req.userData : null;
-  const mail = { email: 'kelechioliver96@gmail.com', newUserPassword: 'hit delete' };
-  await sendMail(mail);
   if (car_id) {
     // check if user is admin or normal user
     if (!isAdmin) {
