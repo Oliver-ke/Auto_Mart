@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { isString } from 'util';
-import { updateItem, getItems } from '../../db/queryHelpers/helper';
+import { updateUser, getUser } from '../../db/queryHelpers/user';
 import sendMail from '../../helper/sendMail';
 import authMiddleware from '../middlewares/authMiddleware';
 
@@ -21,8 +21,7 @@ router.post('/:user_email/reset_password', async (req, res) => {
     if (newPassword.length < 6) {
       return res.status(400).json({ status: 400, error: 'New password should be atleast 6 characters' });
     }
-    const { result: userArr } = await getItems('users', { email });
-    const user = userArr[0];
+    const { result: user } = await getUser({ email });
     if (user) {
       // compare the old password with that in the database
       const isMatch = await bcrypt.compare(password, user.password);
@@ -30,7 +29,7 @@ router.post('/:user_email/reset_password', async (req, res) => {
         // if password matches then gen salt, hash new password and update
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(newPassword, salt);
-        const { result } = await updateItem('users', user.id, { password: hashPassword });
+        const { result } = await updateUser(user.id, { password: hashPassword });
         if (result) {
           return res.status(204).json({ status: 204 });
         }
@@ -43,14 +42,13 @@ router.post('/:user_email/reset_password', async (req, res) => {
   }
   // reaching here means user dont know password
   // check to see if email exist
-  const { result: userArr } = await getItems('users', { email });
-  const user = userArr[0];
+  const { result: user } = await getUser({ email });
   if (user) {
     // generate password for the user, hash, save and send password email
     const newUserPassword = Math.random().toString(36).substring(2, 15);
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(newUserPassword, salt);
-    const { result } = await updateItem('users', user.id, { password: hashPassword });
+    const { result } = await updateUser(user.id, { password: hashPassword });
     if (result) {
       // send mail;
       const mail = { email, newUserPassword };
@@ -70,7 +68,7 @@ router.post('/:user_email/reset_password', async (req, res) => {
 // @private, Only registered users with valid token gets here
 router.get('/', authMiddleware, async (req, res) => {
   const { id } = req.userData;
-  const { result: user } = await getItems('users', { id });
+  const { result: user } = await getUser({ id });
   if (user) {
     // strip out the password from response data
     const { password, ...resData } = user;
