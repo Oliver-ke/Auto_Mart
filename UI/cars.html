@@ -22,6 +22,7 @@
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cars.html">Adverts</a></li>
+      <li id="register"><a href="sign-up.html">Register</a></li>
       <li id="login"><a href="sign-in.html">
           <i class="fas fa-sign-in-alt">
           </i>
@@ -30,7 +31,7 @@
           <i class="fas fa-user">
           </i>
           <span class="hide-sm">Dashboard</span> </a></li>
-      <li id="sign-in" class="hide"><a href="sign-in.html">
+      <li id="sign-in" class="hide"><a id="logout-btn" href="sign-in.html">
           <i class="fas fa-sign-out-alt">
           </i>
           <span class="hide-sm">Logout</span> </a>
@@ -43,7 +44,7 @@
     </h1>
     <p class="lead">
       You can search using options like price range, manufacturer (make), state or directly type the model to get a
-      specific car
+      specific car, also combining more search parameters produces more results matching any parameters specified
     </p>
     <form class=" search-form my-1">
       <div class="search my-1">
@@ -80,8 +81,8 @@
     <div id="car-container" class="cars">
     </div>
   </section>
-
-  <script src="./js/cars.js"></script>
+  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/cars.js"></script>
 </body>
 
 </html>
