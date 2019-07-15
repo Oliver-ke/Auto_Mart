@@ -15,8 +15,6 @@ import {
   manufactureMiddleware,
 } from '../middlewares/queryMiddleware';
 
-import sendMail from '../../helper/sendMail';
-
 const router = express.Router({ strict: true });
 
 // @route POST /car
@@ -24,9 +22,6 @@ const router = express.Router({ strict: true });
 // @access Private, only authenticated users can create car sale ad
 router.post('/', authMiddleware, async (req, res) => {
   const { errors, isValid } = carPostValidator(req.body);
-  const mail = { email: 'kelechioliver96@gmail.com', newUserPassword: 'hit post car' };
-  await sendMail(mail);
-  console.log(req.body);
   if (!isValid) {
     return res.status(400).json({ status: 400, errors });
   }
@@ -154,25 +149,13 @@ router.get('/users/posts', authMiddleware, async (req, res) => {
 // @route GET /car -> admin, /car?<queries> -> others
 // @desc view cars using query
 // @access Public, anyone can view cars, private to view sold and unsold
-router.get(
-  '/',
-  statusMiddleware,
-  minMaxMiddleWare,
-  stateMiddleware,
-  manufactureMiddleware,
-  authMiddleware,
-  async (req, res) => {
-    if (req.userData) {
-      const { is_admin: isAdmin } = req.userData;
-      if (isAdmin) {
-        const { result: cars } = await getItems('cars');
-        return res.status(200).json({ status: 200, data: cars });
-      }
-      return res.status(403).json({ status: 403, error: 'Access denied, user is not admin' });
-    }
-    return res.status(400).json({ status: 400, error: 'Invalid query parameters' });
-  },
-);
+router.get('/', statusMiddleware, minMaxMiddleWare, stateMiddleware, manufactureMiddleware, async (req, res) => {
+  const { result: cars } = await getItems('cars');
+  if (cars.length < 1) {
+    return res.status(404).json({ status: 404, error: 'No car found' });
+  }
+  return res.status(200).json({ status: 200, data: cars });
+});
 
 // @route DELETE /car/{car_id}
 // @desc Admin/car_owner delete car ads endpoint
