@@ -1,22 +1,22 @@
-/* global document localStorage fetch window FormData */
+/* global document fetch FormData */
+import {
+ logout, redirect, getUser, showAlert 
+} from './main.js';
+
 const fileLabel = document.querySelector('.file-name');
 const form = document.querySelector('.form');
 const spinner = document.querySelector('.spinner');
 const logoutBtn = document.querySelector('a#logout-btn');
-const alertError = document.querySelector('.alert-danger');
 const content = document.querySelector('.container');
-const alertSuccess = document.querySelector('.alert-success');
+const alert = document.querySelector('.alert');
 let carData = {
   manufacturer: '',
   price: '',
   model: '',
   body_type: '',
-  carImg: '',
+  image_url: '',
   state: '',
 };
-
-// Get the user
-const user = JSON.parse(localStorage.getItem('user'));
 
 // handles form inputs
 const handleInputChange = (e) => {
@@ -34,30 +34,16 @@ const handleInputChange = (e) => {
   }
 };
 
-const redirect = (location) => {
-  const regex = new RegExp('github.io', 'gi');
-  const reponame = window.location.href.split('/')[3];
-  if (window.location.host.match(regex)) {
-    return window.location.replace(`/${reponame}/${location}`);
-  }
-  return window.location.replace(`/${location}`);
-};
-
 // check if user is valid else redirect
 const checkUserToken = () => {
+  const user = getUser();
   if (!user) {
     return redirect('sign-in.html');
   }
   return content.classList.remove('hide');
 };
 
-checkUserToken();
-
-const showAlert = (msg, alert) => {
-  alert.classList.remove('hide');
-  alert.innerHTML = ` <i class="fas fa-info-circle"></i> ${msg}`;
-  setTimeout(() => alert.classList.add('hide'), 6000);
-};
+document.addEventListener('DOMContentLoaded', checkUserToken);
 
 const composeFormData = (data) => {
   const formData = new FormData();
@@ -72,6 +58,7 @@ const composeFormData = (data) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   spinner.classList.remove('hide');
+  const user = getUser();
   const formData = composeFormData(carData);
   if (user) {
     try {
@@ -83,12 +70,12 @@ const handleSubmit = async (e) => {
         },
       };
       const res = await fetch('https://auto-mart-ng.herokuapp.com/api/v1/car', config);
-      const { status, data, error } = await res.json();
+      const { status, error } = await res.json();
       if (status !== 201) {
         if (status === 400) {
           // show error
           spinner.classList.add('hide');
-          return showAlert(error, alertError);
+          return showAlert('Please fill all input', alert, 'danger');
         }
         if (status === 401) {
           spinner.classList.add('hide');
@@ -98,12 +85,12 @@ const handleSubmit = async (e) => {
       // request was success
       spinner.classList.add('hide');
       form.reset();
-      showAlert('Car advert successfully posted', alertSuccess);
+      showAlert('Car advert successfully posted', alert, 'success');
       return redirect('dashboard.html');
     } catch (error) {
       spinner.classList.add('hide');
       // Catch error is usually due to network or wrong config
-      return showAlert('Network connection error', alertError);
+      return showAlert('Network connection error', alert, 'danger');
     }
   }
   return redirect('sign-in.html');
@@ -115,12 +102,8 @@ document.querySelector('input[name=manufacturer]').addEventListener('change', e 
 document.querySelector('input[name=price]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('input[name=model]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('input[name=body_type]').addEventListener('change', e => handleInputChange(e));
-document.querySelector('input[name=carImg]').addEventListener('change', e => handleInputChange(e));
+document.querySelector('input[name=image_url]').addEventListener('change', e => handleInputChange(e));
 document.querySelector('select[name=state]').addEventListener('change', e => handleInputChange(e));
 
 // clear localstorage and redirect to login
-logoutBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  localStorage.removeItem('user');
-  return redirect('sign-in.html');
-});
+logoutBtn.addEventListener('click', logout);
