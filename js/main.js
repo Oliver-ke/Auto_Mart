@@ -75,8 +75,8 @@ export const request = async (url, method = 'GET', token = '', payload = {}) => 
       headers: { Authorization: `Bearer ${token}` },
     };
   } else if (Object.keys(payload).length > 0) {
-			config.body = JSON.stringify(payload);
-		}
+    config.body = JSON.stringify(payload);
+  }
   try {
     const res = await fetch(url, config);
     if (res.status === 204) {
@@ -97,6 +97,7 @@ export const createCarTb = (table, data) => {
             <td>${item.model}</td>
             <td>${item.price}</td>
             <td class="hide-sm">${item.status}</td>
+            <td class="hide-sm">${item.state}</td>
             <td> <button class="btn btn-danger">
               <a href="car.html?car_id=${item.id}">
                 View/Delete

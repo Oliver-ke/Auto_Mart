@@ -13,7 +13,7 @@ const logoutLink = document.querySelector('li.hide');
 const logoutBtn = document.querySelector('a#logout-btn');
 const dashLink = document.querySelector('li.logout');
 
-const showContent = (cars) => {
+const showContent = (cars, flags) => {
   const user = getUser();
   const soldCars = cars.filter(car => car.status === 'sold');
   const unsoldCars = cars.filter(car => car.status === 'available');
@@ -22,6 +22,7 @@ const showContent = (cars) => {
   createCarTb(unsoldCarTb, unsoldCars);
   // set badges
   document.querySelector('#post').innerText = cars.length;
+  document.querySelector('#flags').innerText = flags.length;
   document.querySelector('#sold-ads').innerText = soldCars.length;
   document.querySelector('#unsold-ads').innerText = unsoldCars.length;
   dispName.textContent = `${user.first_name} ${user.last_name}`;
@@ -37,14 +38,15 @@ const loadData = async () => {
     return redirect('sign-in.html');
   }
   const url = 'https://auto-mart-ng.herokuapp.com/api/v1/car';
+  const flagUrl = 'https://auto-mart-ng.herokuapp.com/api/v1/flag';
   const { error, data: cars } = await request(url, 'GET', user.token);
-
+  const { data: flags } = await request(flagUrl, 'GET', user.token);
   // redirect back to  login if error
   if (error) {
     return redirect('sign-in.html');
   }
   cars.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
-  return showContent(cars);
+  return showContent(cars, flags);
 };
 
 document.addEventListener('DOMContentLoaded', loadData);
