@@ -55,7 +55,7 @@
     </div>
     <div class="badges">
       <div class="badge badge-primary">Posts: <span id="post" class="figure">20</span></div>
-      <div class="badge badge-success">Orders: <span id="orders" class="figure">50</span></div>
+      <div class="badge badge-success">Flags: <span id="flags" class="figure">0</span></div>
       <div class="badge badge-danger">Sold Adverts: <span id="sold-ads" class="figure">10</span></div>
       <div class="badge">Unsold Adverts: <span id="unsold-ads" class="figure">5</span></div>
     </div>
@@ -70,6 +70,7 @@
           <th>Model</th>
           <th>Price(#)</th>
           <th class="hide-sm">Status</th>
+          <th class="hide-sm">State</th>
           <th></th>
         </tr>
       </thead>
@@ -85,32 +86,18 @@
           <th>Model</th>
           <th>Price(#)</th>
           <th class="hide-sm">Status</th>
+          <th class="hide-sm">State</th>
           <th></th>
         </tr>
       </thead>
       <tbody id="unsold"></tbody>
     </table>
-    <h2 class="my-2">
-      <span class="text-primary">|</span>
-      Users Orders
-    </h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th class="hide-sm">Car Price(#)</th>
-          <th class="hide-sm">Your Price(#)</th>
-          <th>State</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="orders"></tbody>
-    </table>
   </section>
   <div class="container">
     <div class="spinner"></div>
   </div>
-  <script src="js/adminDashboard.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/adminDashboard.js"></script>
 </body>
 
 </html>

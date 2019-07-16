@@ -1,5 +1,7 @@
-/* global document localStorage fetch window */
-
+/* global document localStorage */
+import {
+ redirect, formatDate, showAlert, request, logout, getId, setNavLinks 
+} from './main.js';
 // target DOM elements
 const logoutBtn = document.querySelector('a#logout-btn');
 const priceInput = document.querySelector('input[name=biding-price]');
@@ -9,39 +11,6 @@ const spinner = document.querySelector('.container .spinner');
 const spinner2 = document.querySelector('.order');
 const orderForm = document.querySelector('form');
 const flagLink = document.querySelector('.frud-link');
-// Redirect function
-const redirect = (location) => {
-  const regex = new RegExp('github.io', 'gi');
-  const reponame = window.location.href.split('/')[3];
-  if (window.location.host.match(regex)) {
-    return window.location.replace(`/${reponame}/${location}`);
-  }
-  return window.location.replace(`/${location}`);
-};
-
-// formate display date
-const formatDate = (date) => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const currentDatetime = new Date(date);
-  const formattedDate = `${currentDatetime.getDate()} ${months[
-    currentDatetime.getMonth()
-  ]} ${currentDatetime.getFullYear()}`;
-  return formattedDate;
-};
-
-// show alert
-const showAlert = (msg, alert, type) => {
-  alert.classList.remove('hide');
-  if (alert.classList.contains('alert-danger')) {
-    alert.classList.remove('alert-danger');
-  }
-  if (alert.classList.contains('alert-success')) {
-    alert.classList.remove('alert-success');
-  }
-  alert.classList.add(`alert-${type}`);
-  alert.innerHTML = ` <i class="fas fa-info-circle"></i> ${msg}`;
-  setTimeout(() => alert.classList.add('hide'), 6000);
-};
 
 // update ui
 const updateUI = (data) => {
@@ -64,65 +33,26 @@ const updateUI = (data) => {
 };
 
 // Fetch car data
-const fetchData = async (id) => {
-  if (id) {
-    try {
-      const url = `https://auto-mart-ng.herokuapp.com/api/v1/car/${id}`;
-      const res = await fetch(url);
-      const { data: car } = await res.json();
-      return { car };
-    } catch (error) {
-      return { error };
-    }
-  }
-  return { error: 'Invalid id' };
-};
-
-// Make order request
-const makeOrder = async (newData, token) => {
-  const config = {
-    body: JSON.stringify(newData),
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-  };
-  try {
+const fetchData = async (payload = null, id = null) => {
+  if (payload) {
     const url = 'https://auto-mart-ng.herokuapp.com/api/v1/order';
-    const res = await fetch(url, config);
-    const data = await res.json();
-    return await data;
-  } catch (error) {
-    return { error };
+    return request(url, 'POST', payload.token, payload.data);
   }
-};
-
-// Set nav link visibility
-const setNavLinks = () => {
-  if (JSON.parse(localStorage.getItem('user'))) {
-    document.querySelector('li#dash-link').classList.remove('hide');
-    document.querySelector('li#sign-in').classList.remove('hide');
-    document.querySelector('#login').classList.add('hide');
-    document.querySelector('#register').classList.add('hide');
-  }
-};
-
-// Get carId from query params in url
-const getCarId = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const carId = Number(urlParams.get('car_id'));
-  return carId;
+  const url = `https://auto-mart-ng.herokuapp.com/api/v1/car/${id}`;
+  return request(url);
 };
 
 // loads car datail
 const loadDetail = async () => {
-  const carId = getCarId();
+  const carId = getId('car_id');
   flagLink.setAttribute('href', `fraud-ads.html?car_id=${carId}`);
-  const { car, error } = await fetchData(carId);
+  const { data: car, error } = await fetchData(null, carId);
   if (error) {
     return redirect('dashboard.html');
   }
   const {
-    email, owner, id, ...rest
-  } = car;
+ email, owner, id, ...rest 
+} = car;
   updateUI(rest);
   setNavLinks();
   content.classList.remove('hide');
@@ -134,7 +64,7 @@ loadDetail();
 const orderHandler = async (e) => {
   e.preventDefault();
   const price = priceInput.value;
-  const carId = getCarId();
+  const carId = getId('car_id');
   const order = { amount: price, car_id: carId.toString(), status: 'pending' };
   // Check usser
   const user = JSON.parse(localStorage.getItem('user'));
@@ -154,7 +84,7 @@ const orderHandler = async (e) => {
     return showAlert('Price cannot be empty', alert, 'danger');
   }
   if (price !== '') {
-    const { error: orderErr, status, data: orderData } = await makeOrder(order, token);
+    const { error: orderErr, status, data: orderData } = await fetchData({ data: order, token });
     errors = orderErr;
     newOrder = orderData;
     resStatus = status;
@@ -192,8 +122,4 @@ const orderHandler = async (e) => {
 orderForm.onsubmit = e => orderHandler(e);
 
 // clear localstorage and redirect to login once logout click
-logoutBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  localStorage.removeItem('user');
-  redirect('sign-in.html');
-});
+logoutBtn.addEventListener('click', logout);
